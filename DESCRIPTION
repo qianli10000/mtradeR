@@ -1,0 +1,22 @@
+Package: mtradeR
+Title: Metagenomic trajectory analysis with disease endpoint and risk factors
+Version: 0.0.1
+Authors@R: person("Qian", "Li", email = "qian.li@stjude.org",
+                  role = c("aut", "cre")) 
+Description: This package implements joint nested random effect model with matched set indicator to detect microbial trajectories associated with future disease status.
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Imports:
+    HelpersMG,
+    mvQuad,
+    optimParallel,
+    stats,
+    parallel,
+    utils,
+    stringr,
+    dirmult
+Depends: 
+    R (>= 2.10)
+LazyData: true
