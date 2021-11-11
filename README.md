@@ -13,6 +13,7 @@ data("DM_MLE")
 meta_data<-StatSim(n=150)
 
 otu_counts<-TaxaSim(base_par = DM_MLE,StatSim = meta_data)
+
 rel_abun<-t(t(otu_counts)/colSums(otu_counts))
 
 #Use the first 100 taxa to test: 
