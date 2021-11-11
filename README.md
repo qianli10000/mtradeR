@@ -3,6 +3,7 @@ Metagenomic TRajectory Analysis with Disease Endpoint and Risk factors
 # An example
 
 Below is an exmaple code for running simulation pipeline and test JointMatch:
+
 install.packages('mtradeR')
 
 library(mtradeR)
