@@ -1,5 +1,11 @@
-# mtradeR: metagenomic trajectory analysis with disease endpoint and risk factors
-# Below is an exmaple code for running simulation pipeline and test JointMatch:
+# mtradeR 
+Metagenomic TRajectory Analysis with Disease Endpoint and Risk factors
+# An example
+
+Below is an exmaple code for running simulation pipeline and test JointMatch:
+install.packages('mtradeR')
+
+library(mtradeR)
 
 data("DM_MLE")
 
