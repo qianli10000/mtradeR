@@ -13,13 +13,6 @@ dp<-list(relabun=rel_abun[1:100,],meta_data=meta_data)
 
 head(dp$meta_data)
 
-# #                    id  set  Rand_sub.cut  Rand_set.cut genetic outcome age ageset.id
-
-# #subject_1_1   subject_1 set1 [-4.49,0.516] [-4.43,0.333]       L       0   1         1
-
-# #subject_10_1 subject_10 set5 [-4.49,0.516] [-4.43,0.333]       H       1   1         1
-
-
 taxa_filters=c(0.000001,0.05)
 
 identifiers=c('set','id')
