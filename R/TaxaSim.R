@@ -15,8 +15,11 @@ TaxaSim<-function(base_par,StatSim,library.size=100000,min.lib=10000,trace=TRUE)
 
     raw.counts=pi_star=pi_0=NULL
     for(i in 1:max(StatSim$ageset.id)){
+
       cat('Age group:',i,'\n')
+      if(trace){
       print(pi_i[1:10])
+      }
       set_i=unique(StatSim$set[StatSim$ageset.id==i])
 
       pi_i_star=pi_i
@@ -29,7 +32,9 @@ TaxaSim<-function(base_par,StatSim,library.size=100000,min.lib=10000,trace=TRUE)
 
         pi_ij_0=pi_i_star_bar
         cat('Set:',j,'\n')
+        if(trace){
         print(pi_ij_0[1:10])
+        }
         sub_j=rownames(StatSim)[StatSim$set==j & StatSim$ageset.id==i]
 
         pi_ij_star=pi_ij_0
@@ -45,7 +50,9 @@ TaxaSim<-function(base_par,StatSim,library.size=100000,min.lib=10000,trace=TRUE)
           pi_ij_star_bar=colMeans(dirmult::rdirichlet(100,(pi_ij_star*(1-(0.03))/(0.03))))
           pi_ijk_0=pi_ij_star_bar
           cat('Sample:',k,'\n')
+          if(trace){
           print(pi_ijk_0[1:10])
+          }
           pi_ijk_star=pi_ijk_0
 
           pseudo.lam2=0.95
