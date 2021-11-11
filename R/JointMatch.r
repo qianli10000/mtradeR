@@ -32,6 +32,7 @@ JointMatch <- function(DataPrep,filters,identifiers,disease_status,sample_age=NU
   relabun=DataPrep$relabun
   metadata=DataPrep$meta_data
 
+  relabun=relabun[,order(metadata[,identifiers[1]],metadata[,identifiers[2]])]
   metadata = metadata[order(metadata[,identifiers[1]],metadata[,identifiers[2]]),]
 
   id.only=unique(subset(metadata,select = c(identifiers[1],identifiers[2])))
@@ -93,6 +94,8 @@ JointMatch <- function(DataPrep,filters,identifiers,disease_status,sample_age=NU
   filter=rowMeans(relabun)>filters[1] & rowSums(relabun>0)>filters[2]*ncol(relabun)
   taxa_input=relabun[filter,]
 
+  sum.rm=sum(!filter)
+  cat(sum.rm, 'of',nrow(relabun), 'taxa removed by filters','\n')
 
   res=core_match(otu=t(taxa_input),longi_design_all=longi_design,logistic_design_all=logistic_design,outcome,longi_idset,logistic_idset,rand.var,shrinkage,trace)
 
