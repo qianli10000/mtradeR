@@ -4,21 +4,32 @@
 \alias{DataPrep}
 \title{Data preprocessing}
 \usage{
-DataPrep(counts, level, covdata, sample_id, composition, cleananno)
+DataPrep(
+  counts,
+  level,
+  covdata,
+  sample_id,
+  composition = TRUE,
+  cleananno = FALSE
+)
 }
 \arguments{
-\item{counts}{A data frame of OTU-level raw counts with rows as taxa and columns as samples.}
+\item{counts}{A data frame of OTU-level raw counts with rows as taxa and columns as samples. The row names of counts must be the full annotation of each OTU.}
 
 \item{level}{One or multiple levels in 'kingdom','phylum','class','order','family','genus','species'. Default to 'species'.}
 
-\item{covdata}{A data frame of all the covariates to be included in trajectory analysis, either longitudinal or non-longitudinal.}
+\item{covdata}{A data frame of subject ID, set ID, sample ID, disease outcome, and covariates to be included in trajectory analysis.}
 
 \item{sample_id}{Specify the variable for microbiome sample ID in covdata, which should be identical to the column names of counts.}
 
-\item{composition}{If composition = TRUE, then composition. Otherwise, return raw counts in output. Default to TRUE and return counts only.}
+\item{composition}{If composition = TRUE, then returns composition. Otherwise, return raw counts in output. Default to TRUE.}
 
-\item{cleananno}{If cleananno=TRUE, then it cleans out special characters from OTU names.}
+\item{cleananno}{If cleananno=TRUE, then it cleans out special characters from OTU annotations. Default to FALSE.}
+}
+\value{
+\item{$relabun}{Relative abundance table with rows as taxa and columns as samples}
+\item{$meta_data}{A data frame of all covariates (including disease outcome) to be used in JointMatch or JointSingle}
 }
 \description{
-This function transforms the raw counts OTU table into compositional abundance table based on the specified taxonomy level(s)
+This function transforms the raw counts OTU table into compositional abundance table based on the specified taxonomy level(s).
 }

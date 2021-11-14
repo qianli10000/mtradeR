@@ -1,9 +1,11 @@
 
 #' @title Joint nested random effect model with Matched sets indicator
 #' @description This function performs trajectory analysis (either intercept or slope) with disease outcome in matched sets.
-#' @param DataPrep An object returned by DataPrep function
+#' @param DataPrep A list of object returned by DataPrep function or prepared by users. This object must contain $relabun: a relative abundance
+#'                 matrix or data frame with rows as taxa and columns as samples; $meta_data: a matrix or data frame of subject ID, set ID, sample ID, disease outcome, time-variant and time-invariant covariates for all submodels,
+#'                 with columns as variables, and rows as samples in the order of $relabun's samples (columns).
 #' @param filters A numeric vector for taxa filters, specified in the order of c(minimum relative abundance, minimum prevalence )
-#' @param identifiers A character vector for identifiers in DataPrep$meta_data, in the order of c(set indicator, subject ID)
+#' @param identifiers A character vector for set and subject identifiers in DataPrep$meta_data, in the order of c(set ID, subject ID)
 #' @param disease_status A character for disease outcome variable in DataPrep$meta_data.
 #' @param sample_age Name of the covariate representing age (or time point) for each sample.
 #' @param disease_cov Names of the covariates in disease sub-model.
@@ -13,6 +15,10 @@
 #' @param matching_type If participants are matched by a nested case-control design, set matching_type='ncc'.Otherwise, matching_type is NULL as default.
 #' @param matching_factors If matching_type='ncc', matching_factors must be provided.
 #' @param trace If trace=FALSE, JointMatch does not print out parameter estimate per taxon. Default to TRUE.
+#' @return  \item{$OutputPrt}{A list of analysis result for each submodel per taxon. Rows annotated as 'nzAbundance:' is the result for the submodel of non-zero abundance;
+#'          rows annotated as 'Presence:' is the result for the submodel of presence; rows annotated as 'Disease:' is the result for the submodel of disease risk.}
+#'          \item{$IndividualTest}{The test of taxon-disease association in non-zero abundance and presence, individually}
+#'          \item{$JointTest}{Jointly test if a taxon is associated with disease outcome in either non-zero abundance or presence}
 #' @export
 
 

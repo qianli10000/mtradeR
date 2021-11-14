@@ -1,24 +1,23 @@
 
 #' @title Data preprocessing
-#' @description This function transforms the raw counts OTU table into compositional abundance table based on the specified taxonomy level(s)
-#' @param counts A data frame of OTU-level raw counts with rows as taxa and columns as samples.
+#' @description This function transforms the raw counts OTU table into compositional abundance table based on the specified taxonomy level(s).
+#' @param counts A data frame of OTU-level raw counts with rows as taxa and columns as samples. The row names of counts must be the full annotation of each OTU.
 #' @param level One or multiple levels in 'kingdom','phylum','class','order','family','genus','species'. Default to 'species'.
-#' @param covdata A data frame of all the covariates to be included in trajectory analysis, either longitudinal or non-longitudinal.
+#' @param covdata A data frame of subject ID, set ID, sample ID, disease outcome, and covariates to be included in trajectory analysis.
 #' @param sample_id Specify the variable for microbiome sample ID in covdata, which should be identical to the column names of counts.
-#' @param composition If composition = TRUE, then composition. Otherwise, return raw counts in output. Default to TRUE and return counts only.
-#' @param cleananno If cleananno=TRUE, then it cleans out special characters from OTU names.
+#' @param composition If composition = TRUE, then returns composition. Otherwise, return raw counts in output. Default to TRUE.
+#' @param cleananno If cleananno=TRUE, then it cleans out special characters from OTU annotations. Default to FALSE.
+#' @return  \item{$relabun}{Relative abundance table with rows as taxa and columns as samples}
+#'          \item{$meta_data}{A data frame of all covariates (including disease outcome) to be used in JointMatch or JointSingle}
 #' @export
 
 
-DataPrep <- function(counts,level,covdata,sample_id,composition,cleananno) {
+DataPrep <- function(counts,level,covdata,sample_id,composition=TRUE,cleananno=FALSE) {
 
   if(missing(covdata)==TRUE )
   {stop("Please provide correct meta data")}
 
   rownames(covdata) <- covdata[,sample_id]
-  #covdata <- covdata[,-1]
-
- #covdata = covdata[order(covdata[,setid],covdata[,subjectid],covdata[,sample_age]),]
 
   if(length(intersect(covdata[,sample_id],colnames(counts))) < length(covdata[,sample_id]))
     {stop("Sample IDs dont match with abundance data Sample IDs")}
@@ -41,7 +40,7 @@ DataPrep <- function(counts,level,covdata,sample_id,composition,cleananno) {
 
     {
 
-      print("Lowest level is species")
+      print("The lowest rank is species")
 
       if(missing(composition)){composition=FALSE}
 
@@ -173,7 +172,7 @@ DataPrep <- function(counts,level,covdata,sample_id,composition,cleananno) {
     if(length(chk[chk==5])==length(chk))
 
     {
-      print("Lowest level is genus")
+      print("The lowest rank is genus")
 
       if(missing(composition)){composition=FALSE}
 
