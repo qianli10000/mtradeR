@@ -10,7 +10,7 @@ library(devtools)
 
 install_github('qianli10000/mtradeR')
 
-library(mtradeR)
+library('mtradeR')
 
 data("DM_MLE")
 
