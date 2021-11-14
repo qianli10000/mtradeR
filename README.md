@@ -5,7 +5,9 @@ Metagenomic TRajectory Analysis with Disease Endpoint and Risk factors
 #Below is an exmaple code for running the simulation pipeline and test JointMatch:
 
 install.packages("devtools")
+
 library(devtools)
+
 install_github('qianli10000/mtradeR')
 
 library(mtradeR)
