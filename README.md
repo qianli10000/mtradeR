@@ -1,5 +1,8 @@
 # mtradeR 
-Metagenomic TRajectory Analysis with Disease Endpoint and Risk factors
+Metagenomic TRajectory Analysis with Disease Endpoint and Risk factors. 
+
+We proposed a joint mixed effect model (JointMatch) to detect OTUs predictive of hosts’ disease status in matched sets. We also designed and implemented a semi-parametric simulation pipeline was built to generate disease outcome and temporal high-dimensional metagenomic counts in matched sets. 
+
 # An example
 
 #Below is an exmaple code for running the simulation pipeline and test JointMatch:
