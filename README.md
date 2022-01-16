@@ -29,7 +29,7 @@ dp<-list(relabun=rel_abun[1:100,],meta_data=meta_data)
 
 head(dp$meta_data)
 
-taxa_filters=c(0.000001,0.05)
+taxa_filters=c(0.00001,0.05)
 
 identifiers=c('set','id')
 
