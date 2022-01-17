@@ -6,7 +6,7 @@
 #' @param trace Prints out the simulated true relative abundance of the first 10 taxa. Defaults to TRUE.
 #' @export
 
-TaxaSim<-function(base_par,StatSim,library.size=100000,min.lib=10000,trace=TRUE){
+TaxaSim<-function(base_par,StatSim, shift_subject=0, library.size=100000,min.lib=10000,trace=TRUE){
 
   G=length(base_par)
   disp=1/(sum(base_par)+1)
@@ -55,7 +55,7 @@ TaxaSim<-function(base_par,StatSim,library.size=100000,min.lib=10000,trace=TRUE)
           }
           pi_ijk_star=pi_ijk_0
 
-          pseudo.lam2=0.95
+          pseudo.lam2=shift_subject
 
           sum3=pseudo.lam2*(sum(pi_ijk_star[1:floor(G/2)])-sum(pi_ijk_star[1:floor(G/8)]))*(as.numeric(unique(StatSim[k,]$Rand_sub.cut))-1)/(max(as.numeric(StatSim$Rand_sub.cut))-1)
           pi_ijk_star[1:floor(G/8)]=pi_ijk_star[1:floor(G/8)]+sum3*pi_ijk_star[1:floor(G/8)]/sum(pi_ijk_star[1:floor(G/8)])
