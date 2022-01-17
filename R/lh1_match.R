@@ -2,7 +2,7 @@
 
 
 lh1_match<-function(y,phi,x,beta1,beta2,lamda1,lamda2,gamma1,gamma2,rand_sub,rand_set){
-  quad.n=5
+  quad.n=4
   Q=quad.n^3
   beta1=matrix(rep(beta1,Q),ncol = Q)
   mu=1/(1+exp(-(x%*%beta1+lamda1*rand_sub+gamma1*rand_set)))
