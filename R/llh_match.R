@@ -62,9 +62,9 @@ llh_match<-function(par,taxa,longi_design_all,logistic_design_all,outcome,longi_
     ifelse(longi_id[longi_order==2]==x,1,0)
   }))
 
-  joint.logl_1=prod.mat1%*%log(lh1_match(taxa_1,phi,longi_design_all_1,beta1,beta2,lamda1,lamda2,gamma1,gamma2,gh.nodes1*sig_sub*X_rand1*sqrt(2),gh.nodes_set1*sig_sub*X_rand1*sqrt(2)))+
+  joint.logl_1=prod.mat1%*%log(lh1_match(taxa_1,phi,longi_design_all_1,beta1,beta2,lamda1,lamda2,gamma1,gamma2,gh.nodes1*sig_sub*X_rand1*sqrt(2),gh.nodes_set1*sig_set*X_rand1*sqrt(2)))+
     log(lh2_match(outcome_1,alpha,logistic_design_all_1,gh.nodes1_sub*sig_sub*sqrt(2),gh.nodes_set_sub*sig_sub*sqrt(2)))
-  joint.logl_2=prod.mat2%*%log(lh1_match(taxa_2,phi,longi_design_all_2,beta1,beta2,lamda1,lamda2,gamma1,gamma2,gh.nodes2*sig_sub*X_rand2*sqrt(2),gh.nodes_set2*sig_sub*X_rand2*sqrt(2)))+
+  joint.logl_2=prod.mat2%*%log(lh1_match(taxa_2,phi,longi_design_all_2,beta1,beta2,lamda1,lamda2,gamma1,gamma2,gh.nodes2*sig_sub*X_rand2*sqrt(2),gh.nodes_set2*sig_set*X_rand2*sqrt(2)))+
     log(lh2_match(outcome_2,alpha,logistic_design_all_2,gh.nodes2_sub*sig_sub*sqrt(2),gh.nodes_set_sub*sig_sub*sqrt(2)))
 
 
