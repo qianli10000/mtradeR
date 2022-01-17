@@ -50,7 +50,7 @@ core_match<-function(otu,longi_design_all,logistic_design_all,outcome,longi_idse
 
   if(trace){
     cat(colnames(otu)[i],'\n')
-    cat(pn.llh,'\n')
+    cat('Penalized Log Likelihood:',pn.llh,'\n')
     print(matcoef,quote = F)
   }
   Output=as.data.frame(matcoef)
