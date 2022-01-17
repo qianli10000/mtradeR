@@ -35,7 +35,7 @@ core_match<-function(otu,longi_design_all,logistic_design_all,outcome,longi_idse
                    paste('Disease',colnames(logistic_design_all),sep = ':'), c('Overdispersion','Variance_sbj','Variance_set'))
 
   m=optimParallel::optimParallel(par.ini,llh_match,taxa=taxa,longi_design_all=longi_design_all,logistic_design_all=logistic_design_all,outcome=outcome,longi_idset=longi_idset,logistic_idset=logistic_idset,rand.var=rand.var,shrinkage=shrinkage,
-          lower = c(rep(-Inf,(P-3)),1e-04,1e-04,1e-04),upper=rep(Inf,P),method = 'L-BFGS-B',hessian = T,parallel = list(forward=T),control = list(ndeps=rep(5*1e-7,length(par.ini))))
+          lower = c(rep(-Inf,(P-3)),1e-04,1e-04,1e-04),upper=rep(Inf,P),method = 'L-BFGS-B',hessian = T)#,parallel = list(forward=T),control = list(ndeps=rep(5*1e-7,length(par.ini))))
 
 
   se.coef = HelpersMG::SEfromHessian(m$hessian)
