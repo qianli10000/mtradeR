@@ -1,7 +1,7 @@
 #' @export
 
 llh_match<-function(par,taxa,longi_design_all,logistic_design_all,outcome,longi_idset,logistic_idset,rand.var,shrinkage){
-  quad.n<-4
+  quad.n<-3
   longi_dim=ncol(longi_design_all)
   logistic_dim=ncol(logistic_design_all)
 
