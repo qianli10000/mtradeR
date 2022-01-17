@@ -16,7 +16,7 @@ core_match<-function(otu,longi_design_all,logistic_design_all,outcome,longi_idse
 
   Output.list=vector(mode='list',length=ncol(otu))
   Test.table=matrix(nrow = ncol(otu),ncol=8)
-
+  pnLLH=NULL
 
   cl <-parallel::makeCluster(min(16,parallel::detectCores()-1))     # set the number of processor cores
   parallel::clusterExport(cl, list( "longi_dim", "logistic_dim","llh_match", "lh1_match", "lh2_match"))
@@ -36,7 +36,7 @@ core_match<-function(otu,longi_design_all,logistic_design_all,outcome,longi_idse
 
   m=optimParallel::optimParallel(par.ini,llh_match,taxa=taxa,longi_design_all=longi_design_all,logistic_design_all=logistic_design_all,outcome=outcome,longi_idset=longi_idset,logistic_idset=logistic_idset,rand.var=rand.var,shrinkage=shrinkage,
           lower = c(rep(-Inf,(P-3)),1e-04,1e-04,1e-04),upper=rep(Inf,P),method = 'L-BFGS-B',hessian = T,parallel = list(forward=T),control = list(ndeps=rep(5*1e-7,length(par.ini))))
-
+  pn.llh=-m$value
 
   se.coef = HelpersMG::SEfromHessian(m$hessian)
   se.coef[se.coef<1e-4]<-1e-4
@@ -50,11 +50,13 @@ core_match<-function(otu,longi_design_all,logistic_design_all,outcome,longi_idse
 
   if(trace){
     cat(colnames(otu)[i],'\n')
+    cat(pn.llh,'\n')
     print(matcoef,quote = F)
   }
   Output=as.data.frame(matcoef)
   Output.list[[i]]=Output
   Test.table[i,]=c(matcoef['nzAbundance_sbj',1:4],matcoef['Presence_sbj',1:4])
+  pnLLH=c(pnLLH,pn.llh)  
   }
   parallel::stopCluster(cl)
   names(Output.list)=colnames(otu)
@@ -69,7 +71,7 @@ core_match<-function(otu,longi_design_all,logistic_design_all,outcome,longi_idse
   JointTest=data.frame(W.stat=joint.stat,W.pvalue=joint.p,W.adj.pvalue=joint.fdr)
   rownames(JointTest)=colnames(otu)
 
-  return(list(OutputPrt=Output.list,IndividualTest=Test.table,JointTest=JointTest))
+  return(list(OutputPrt=Output.list,IndividualTest=Test.table,JointTest=JointTest,Penalized_Likelihood=pnLLH))
 
 
 }
