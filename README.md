@@ -17,15 +17,15 @@ library('mtradeR')
 
 data("DM_MLE")
 
-meta_data<-StatSim(n=150)
+me_data<-StatSim(n=150)
 
-otu_counts<-TaxaSim(base_par = DM_MLE,StatSim = meta_data)
+otu_counts<-TaxaSim(base_par = DM_MLE,StatSim = me_data)
 
 rel_abun<-t(t(otu_counts)/colSums(otu_counts))
 
 #Use the first 100 taxa to test: 
 
-dp<-list(relabun=rel_abun[1:100,],meta_data=meta_data)
+dp<-list(relabun=rel_abun[1:100,],meta_data=me_data)
 
 head(dp$meta_data)
 
