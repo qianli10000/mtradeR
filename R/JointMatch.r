@@ -23,7 +23,7 @@
 
 
 JointMatch <- function(DataPrep,filters,identifiers,disease_status,sample_age=NULL,disease_cov,
-                       OTU_cov,trajectory_type,shrinkage=0.2,matching_type=NULL,matching_factors=NULL,trace=TRUE)
+                       OTU_cov,trajectory_type,shrinkage=seq(0.17,0.22,0.01),matching_type=NULL,matching_factors=NULL,trace=TRUE)
 
 {
   if(!trajectory_type %in% c('intercept','slope')){
