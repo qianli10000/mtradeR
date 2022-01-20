@@ -75,7 +75,5 @@ TaxaSim<-function(base_par,StatSim, shift_subject=0, library.size=100000,min.lib
 
 
     colnames(raw.counts)=rownames(StatSim)
-    keep=rowSums(raw.counts==0)>0.01*ncol(raw.counts)
-    raw.counts=raw.counts[keep,]
     return(raw.counts)
 }
