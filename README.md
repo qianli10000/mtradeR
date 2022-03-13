@@ -54,6 +54,7 @@ filter=mean.rel.abun>1e-6 & rowSums(rel.abun==0)<0.95*ncol(rel.abun)
 input_tab=rel.abun[filter,]
 
 #Run JMR with tuning
+
 JMR.res=JMR_Tab(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome,
                           long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)',
                           tune=seq(0.05,0.15,0.05),cov.taxa=T)
