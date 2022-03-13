@@ -17,28 +17,22 @@ library('mtradeR')
 
 data("DM_MLE")
 
-me_data<-StatSim(n=150)
+meta_data<-meta_data[order(meta_data$set,meta_data$id),]
 
-otu_counts<-TaxaSim(base_par = DM_MLE,StatSim = me_data)
+outcome<-meta_data$outcome
 
-rel_abun<-t(t(otu_counts)/colSums(otu_counts))
+names(outcome)<-meta_data$id
 
-#Use the first 100 taxa to test: 
+long_design <- model.matrix(~age,meta_data)
 
-dp<-list(relabun=rel_abun[1:100,],meta_data=me_data)
+logistic<-unique(subset(meta_data,select = -c(age,ageset.id)) )
 
-head(dp$meta_data)
+logistic_design <- model.matrix(~genetic,logistic)
 
-taxa_filters=c(0.00001,0.05)
+long_idset <- meta_data[,c('id','set','order')]
 
-identifiers=c('set','id')
+logistic_idset <- logistic[,c('id','set','order')]
 
-disease_s='outcome'
-
-disease_c='genetic'
-
-otu_c=c('age','genetic')
-
-test.run<-JointMatch(DataPrep = dp,filters = taxa_filters,identifiers = identifiers,disease_status = disease_s,
-
-disease_cov = disease_c,OTU_cov =otu_c,trajectory_type = 'intercept' )
+JMR.res=JMR_Tab(otu_tab = taxa_input,long_design = long_design,logistic_design = logistic_design,outcome = outcome,
+                          long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)',
+                          tune=seq(0.05,0.15,0.05),cov.taxa=T)
