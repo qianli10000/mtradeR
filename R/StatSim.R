@@ -66,7 +66,7 @@ var_all$ageset.id=as.numeric(var_all$ageset.id)
 rownames(var_all)=paste(var_all$id,var_all$age,sep = '_')
 meta_data=var_all[order(var_all$ageset.id),]
 
-meta_data=subset(meta_data,select = -order)
+meta_data=subset(meta_data)
 
 return(meta_data)
 

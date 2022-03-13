@@ -1,12 +1,10 @@
-require(gamlss)
-require(optimParallel)
-require(HelpersMG)
-
-
 #' @export
 
 JMR<-function(taxa,others_abun,others_pres,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=T){
-  options(stringsAsFactors = F)
+  require(gamlss)
+  require(optimParallel)
+  require(HelpersMG)
+  
   
   long_dim<<-ncol(long_design)
   logistic_dim<<-ncol(logistic_design)

@@ -57,14 +57,14 @@ TaxaSim<-function(base_par,StatSim, shift_subject=0, library.size=100000,min.lib
 
           lam2=shift_subject 
           
-          sum3=lam2*(sum(pi_ijk_star[1:floor(G*0.5)])-sum(pi_ijk_star[1:floor(G*0.15)]))*(as.numeric(Rand_a.cut[k])-1)/(max(as.numeric(Rand_a.cut))-1)*((i-1)/(max(var_all$ageset.id)))
+          sum3=lam2*(sum(pi_ijk_star[1:floor(G*0.5)])-sum(pi_ijk_star[1:floor(G*0.15)]))*(as.numeric(StatSim[k,]$Rand_sub.cut)-1)/(max(as.numeric(StatSim$Rand_sub.cut))-1)
           
           pi_ijk_star[1:floor(G*0.15)]=pi_ijk_star[1:floor(G*0.15)]+sum3*pi_ijk_star[1:floor(G*0.15)]/sum(pi_ijk_star[1:floor(G*0.15)])
-          pi_ijk_star[(floor(G*0.15)+1):floor(G*0.3)]=pi_ijk_star[(floor(G*0.15)+1):floor(G*0.3)]*(1-lam2*(as.numeric(Rand_a.cut[k])-1)/(max(as.numeric(Rand_a.cut))-1))
+          pi_ijk_star[(floor(G*0.15)+1):floor(G*0.3)]=pi_ijk_star[(floor(G*0.15)+1):floor(G*0.3)]*(1-lam2*(as.numeric(StatSim[k,]$Rand_sub.cut)-1)/(max(as.numeric(StatSim$Rand_sub.cut))-1))
           
-          sum4=lam2*(sum(pi_ijk_star[1:floor(G*0.5)])-sum(pi_ijk_star[1:floor(G*0.3)]))*(as.numeric(Rand_a.cut[k])-1)/(max(as.numeric(Rand_a.cut))-1)*((i-1)/(max(var_all$ageset.id)))
+          sum4=lam2*(sum(pi_ijk_star[1:floor(G*0.5)])-sum(pi_ijk_star[1:floor(G*0.3)]))*(as.numeric(StatSim[k,]$Rand_sub.cut)-1)/(max(as.numeric(StatSim$Rand_sub.cut))-1)
           
-          if(as.numeric(Rand_a.cut[k])==2){
+          if(as.numeric(StatSim[k,]$Rand_sub.cut)==2){
             rid=sample((floor(G*0.3)+1):floor(G),size = floor(G*0.3))
             while(sum(pi_ijk_star[rid])<sum4){
               rid=sample((floor(G*0.3)+1):floor(G),size = floor(G*0.3))
@@ -83,7 +83,7 @@ TaxaSim<-function(base_par,StatSim, shift_subject=0, library.size=100000,min.lib
       }
     }
 
-
+    raw.counts=ifelse(raw.counts<5,0,raw.counts)
     colnames(raw.counts)=rownames(StatSim)
     # keep=rowSums(raw.counts==0)>0.01*ncol(raw.counts)
     # raw.counts=raw.counts[keep,]

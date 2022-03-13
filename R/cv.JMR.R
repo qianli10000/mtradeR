@@ -1,3 +1,4 @@
+#' @export
 cv.JMR<-function(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,cov.taxa=T,shrinkage=0.1){
 require(vegan)  
 set_ids=unique(logistic_idset[,2])
