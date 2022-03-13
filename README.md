@@ -1,7 +1,7 @@
 # mtradeR 
 Metagenomic TRajectory Analysis with Disease Endpoint and Risk factors. 
 
-We proposed a joint mixed effect model (JointMatch) to detect OTUs predictive of hosts’ disease status in matched sets. We also designed and implemented a semi-parametric simulation pipeline was built to generate disease outcome and temporal high-dimensional metagenomic counts in matched sets. 
+We proposed a Joint model with Matching and Regularization (JMR) to detect OTUs predictive of hosts’ disease status in matched sets. We also designed and implemented a simulation pipeline to generate disease outcome and temporal high-dimensional metagenomic counts in matched sets. 
 
 # An example
 
