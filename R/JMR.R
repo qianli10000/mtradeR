@@ -36,7 +36,7 @@ JMR<-function(taxa,others_abun,others_pres,long_design,logistic_design,outcome,l
                                    lower = c(rep(-Inf,(P-3)),1e-05,1e-05,1e-05),upper=rep(Inf,P),method = 'L-BFGS-B',hessian = T,parallel = list(forward=T),control = list(ndeps=rep(5*1e-7,length(par.ini))))
     pn.llh=-m$value
   
-  stopCluster(cl)
+  optimParallel::stopCluster(cl)
   
   se.coef = HelpersMG::SEfromHessian(m$hessian)
   se.coef[se.coef<1e-6]<-1e-6
