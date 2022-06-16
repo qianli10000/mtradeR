@@ -1,4 +1,4 @@
-T
+
 #' @title Joint model with Matching and Regularization (JMR)
 #' @description This function test trajectory (either intercept or slope) association with disease outcome in matched sets.
 #' @param otu_tab A table of relative abundance with rows as OTUs and columns as samples. 
