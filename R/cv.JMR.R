@@ -3,7 +3,6 @@ cv.JMR<-function(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,l
 require(vegan)  
 set_ids=unique(logistic_idset[,2])
 n_set=length(set_ids)
-set_ids=sample(set_ids,n_set,replace = F)
 foldsize=floor(n_set/5)
 
 if(cov.taxa==T){
