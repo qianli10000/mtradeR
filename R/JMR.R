@@ -1,7 +1,7 @@
 #' @export
 
 JMR<-function(taxa,others_abun,others_pres,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=T){
-  require(Parallel)
+  require(parallel)
   require(optimParallel)
   require(HelpersMG)
   
