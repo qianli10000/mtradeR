@@ -1,11 +1,11 @@
 Package: mtradeR
-Title: Metagenomic TRajectory Analysis with Disease Endpoint and Risk factors 
-Version: 0.0.0.9000
+Title: Metagenomic Trajectory Analysis with Disease Endpoint and Risk Factors 
+Version: 0.0.1
 Authors@R: 
-    person("Qian", "Li", , "qian.li@stjude.org", role = c("aut", "cre"),
+    person("Qian", "Li", , "qian.li10000@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9874-3555"))
-Description: This package implements a framework to detect taxon-specific trajectory predictive of disease onset, 
-    and provides simulation pipeline to generate high-dimensional raw counts table for temporal metagenome under maching design.
+Description: This framework detects taxon-specific trajectory predictive of disease onset and adjusts for the collinearity between taxa.
+    A simulation pipeline is provided to generate high-dimensional raw counts table for temporal metagenomes with matched sets.
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
