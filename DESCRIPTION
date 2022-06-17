@@ -1,15 +1,24 @@
 Package: mtradeR
-Title: What the Package Does (One Line, Title Case)
+Title: Metagenomic TRajectory Analysis with Disease Endpoint and Risk factors 
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Qian", "Li", , "qian.li@stjude.org", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-9874-3555"))
+Description: This package implements a framework to detect taxon-specific trajectory predictive of disease onset, 
+    and provides simulation pipeline to generate high-dimensional raw counts table for temporal metagenome under maching design.
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Depends: 
-    R (>= 2.10)
+    R (>= 2.10),
+    optimParallel
 LazyData: true
+Imports:
+    vegan,
+    glmnet,
+    parallel,
+    HelpersMG,
+    dirmult,
+    mvQuad
+License: MIT + file LICENSE
+
