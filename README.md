@@ -43,7 +43,7 @@ logistic_idset <- logistic[,c('id','set','order')]
 
 #Generate metagenomic raw counts table 
 
-raw.counts=TaxaSim(DM_MLE,StatSim = meta_data,shift_subject = 0,trace =F)
+raw.counts=TaxaSim(DM_MLE,StatSim = meta_data,shift_subject = 0.8,trace =F)
 
 rel.abun=t(t(raw.counts)/colSums(raw.counts))
 
