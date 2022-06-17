@@ -2,14 +2,14 @@
 #' @title Joint model with Matching and Regularization (JMR)
 #' @description This function test trajectory (either intercept or slope) association with disease outcome in matched sets.
 #' @param otu_tab A table of relative abundance with rows as OTUs and columns as samples. 
-#' @param long_design A numeric vector for taxa filters, specified in the order of c(minimum relative abundance, minimum prevalence )
-#' @param logistic_design A character vector for set and subject identifiers in DataPrep$meta_data, in the order of c(set ID, subject ID)
-#' @param outcome A character for disease outcome variable in DataPrep$meta_data.
-#' @param long_idset Name of the covariate representing age (or time point) for each sample.
-#' @param logistic_idset Names of the covariates in disease sub-model.
-#' @param rand.var Names of the covariates used in OTU sub-models.
-#' @param tune The type of trajectory analysis: intercept or slope.
-#' @param cov.taxa Whether to adjust for covariate taxa. 
+#' @param long_design Design matrix for longitudinal variables in the abundance-presence sub-model.
+#' @param logistic_design Design matrix for risk factors in the disease sub-model.
+#' @param outcome A vector of disease outcome per subject.
+#' @param long_idset Specify the set and subject identifier names in long_design, in the order of c(set_ID, subject_ID)
+#' @param logistic_idset Specify the set and subject identifier names in logistic_design, in the order of c(set_ID, subject_ID)
+#' @param rand.var The type of trajectory analysis, intercept: '(Intercept)', or slope: 'age'.
+#' @param tune A scalar or vector of tuning parameter for L2 regularization. If otu_tab contains <10 rows (OTUs), tune must be a scalar. 
+#' @param cov.taxa Whether to adjust for interdependence between taxa, default as cov.taxa=TRUE. If otu_tab contains only one row (OTU), cov.taxa must be FALSE. 
 #' @param n.cores Number of workers registered in parallel computing. 
 #' @return  \item{$test.result}{The result of joint test on relative abundance and presence.}
 #'          \item{$rho}{Tuning parameter value.}
@@ -19,7 +19,7 @@
 #' data("DM_MLE")
 #' 
 #' #Generate set indicator and disease outcome
-#' meta_data<-StatSim(n=50)
+#' meta_data<-StatSim(n=4,tps=2)
 #' meta_data<-meta_data[order(meta_data$set,meta_data$id),]
 #' subj_data<-unique(meta_data[,c('id','outcome')])
 #' outcome<-subj_data$outcome
@@ -31,8 +31,8 @@
 #' long_idset <- meta_data[,c('id','set','order')]
 #' logistic_idset <- logistic[,c('id','set','order')]
 #' 
-#' #Generate metagenomic raw counts table with dimension P=10 (e.g. at phylum level).
-#' raw.counts=TaxaSim(DM_MLE,StatSim = meta_data,shift_subject = 0,trace =FALSE)
+#' #Generate a toy example of metagenomic raw counts table with dimension P=20.
+#' raw.counts=TaxaSim(DM_MLE[1:20],StatSim = meta_data,shift_subject = 0,trace =FALSE)
 #' rel.abun=t(t(raw.counts)/colSums(raw.counts))
 #' 
 #' #Filter taxa by relative abundance and prevalence
@@ -40,27 +40,22 @@
 #' filter=mean.rel.abun>1e-6 & rowSums(rel.abun==0)<0.95*ncol(rel.abun)
 #' input_tab=rel.abun[filter,]
 #' 
-#' #Run JMR without tuning and covariate taxa on a low-dimension  microbiota. 
-#' JMR.res=JMR(otu_tab = input_tab[1:10,],long_design = long_design,logistic_design = logistic_design,
+#' #Run JMR without tuning and covariate taxa for the first OTU. 
+#' JMR.res=JMR(otu_tab = input_tab[1,],long_design = long_design,logistic_design = logistic_design,
 #' outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)',
-#' tune=0.1,cov.taxa=TRUE,n.cores=2)
+#' tune=0.1,cov.taxa=FALSE,n.cores=1)
 
 
 
 JMR<-function(otu_tab,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,
                   tune=seq(0.05,0.15,0.05),cov.taxa=T,n.cores=NULL){
 
+
   
-if(nrow(otu_tab)==1){
-  stop('Input is not a table')
+if(is.null(nrow(otu_tab))){
+  otu_tab=matrix(otu_tab,nrow=1)
 }
-    
-otu_tab=as.matrix(otu_tab)
-mean.abun=rowMeans(otu_tab)
-dist.abun <- as.matrix(vegan::vegdist(otu_tab,method = "bray"))
-dist.pres <- as.matrix(vegan::vegdist(otu_tab,method = "bray",binary = T))
-d_abun=quantile(dist.abun[dist.abun!=0],probs = 0.1)
-d_pres=quantile(dist.pres[dist.pres!=0],probs = 0.1)
+  otu_tab=as.matrix(otu_tab)  
 
 # cross-validation
 if(length(tune)>1){
@@ -112,7 +107,11 @@ for(i in 1:n_otu){
     limit_pres=0
     others_pres=NULL
   }else{ 
-    
+  mean.abun=rowMeans(otu_tab)
+  dist.abun <- as.matrix(vegan::vegdist(otu_tab,method = "bray"))
+  dist.pres <- as.matrix(vegan::vegdist(otu_tab,method = "bray",binary = T))
+  d_abun=quantile(dist.abun[dist.abun!=0],probs = 0.1)
+  d_pres=quantile(dist.pres[dist.pres!=0],probs = 0.1)  
   dist_abun_i=dist.abun[i,][-i]
   dist_pres_i=dist.pres[i,][-i]
   if(min(dist_abun_i)<d_abun){
