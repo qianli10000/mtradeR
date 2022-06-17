@@ -23,9 +23,11 @@ meta_data<-StatSim(n=150)
 
 meta_data<-meta_data[order(meta_data$set,meta_data$id),]
 
-outcome<-meta_data$outcome
+subj_data<-meta_data[,c('id','outcome')]
 
-names(outcome)<-meta_data$id
+outcome<-subj_data$outcome
+
+names(outcome)<-subj_data$id
 
 long_design <- model.matrix(~age,meta_data)
 
