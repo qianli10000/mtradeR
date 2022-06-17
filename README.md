@@ -23,7 +23,7 @@ meta_data<-StatSim(n=150)
 
 meta_data<-meta_data[order(meta_data$set,meta_data$id),]
 
-subj_data<-meta_data[,c('id','outcome')]
+subj_data<-unique(meta_data[,c('id','outcome')])
 
 outcome<-subj_data$outcome
 
