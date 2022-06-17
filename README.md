@@ -57,6 +57,6 @@ input_tab=rel.abun[filter,]
 
 #Run JMR with tuning
 
-JMR.res=JMR_Tab(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome,
+JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome,
                           long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)',
                           tune=seq(0.05,0.15,0.05),cov.taxa=T)
