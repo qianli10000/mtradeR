@@ -1,6 +1,6 @@
 
 
-JMR_core<-function(taxa,others_abun,others_pres,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=T){
+JMR_core<-function(taxa,others_abun,others_pres,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=T,n.cores=NULL){
  
   long_dim<-ncol(long_design)
   logistic_dim<-ncol(logistic_design)
@@ -18,8 +18,11 @@ JMR_core<-function(taxa,others_abun,others_pres,long_design,logistic_design,outc
     }
     
     P<-P_others_abun+P_others_pres+2*long_dim+logistic_dim+8
-  
-  cl <- parallel::makeCluster(parallel::detectCores()-1,setup_strategy = "sequential")     # set the number of processor cores
+    
+    if(is.null(n.cores)){
+    n.cores=min(parallel::detectCores()-1,16)
+    }
+    cl <- parallel::makeCluster(n.cores,setup_strategy = "sequential")     # set the number of processor cores
   
   parallel::setDefaultCluster(cl=cl) # set 'cl' as default cluster
   par.ini=c(composition_others=rep(0,P_others_abun),presence_others=rep(0,P_others_pres),composition_beta=rep(0,long_dim),composition_lambda=0,composition_gamma=0,presence_beta=rep(0,long_dim),presence_lambda=0,presence_gamma=0,outcome_alpha=rep(0,logistic_dim),dispersion=1,variance_a=1,variance_b=1)

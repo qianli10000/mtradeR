@@ -10,6 +10,7 @@
 #' @param rand.var Names of the covariates used in OTU sub-models.
 #' @param tune The type of trajectory analysis: intercept or slope.
 #' @param cov.taxa Whether to adjust for covariate taxa. 
+#' @param n.cores Number of workers registered in parallel computing. 
 #' @return  \item{$test.result}{The result of joint test on relative abundance and presence.}
 #'          \item{$rho}{Tuning parameter value.}
 #' @import optimParallel
@@ -18,7 +19,7 @@
 #' data("DM_MLE")
 #' 
 #' #Generate set indicator and disease outcome
-#' meta_data<-StatSim(n=150)
+#' meta_data<-StatSim(n=50)
 #' meta_data<-meta_data[order(meta_data$set,meta_data$id),]
 #' subj_data<-unique(meta_data[,c('id','outcome')])
 #' outcome<-subj_data$outcome
@@ -31,7 +32,7 @@
 #' logistic_idset <- logistic[,c('id','set','order')]
 #' 
 #' #Generate metagenomic raw counts table with dimension P=10 (e.g. at phylum level).
-#' raw.counts=TaxaSim(DM_MLE[1:10],StatSim = meta_data,shift_subject = 0,trace =F)
+#' raw.counts=TaxaSim(DM_MLE,StatSim = meta_data,shift_subject = 0,trace =FALSE)
 #' rel.abun=t(t(raw.counts)/colSums(raw.counts))
 #' 
 #' #Filter taxa by relative abundance and prevalence
@@ -40,12 +41,14 @@
 #' input_tab=rel.abun[filter,]
 #' 
 #' #Run JMR without tuning and covariate taxa on a low-dimension  microbiota. 
-#' JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', tune=0.1,cov.taxa=F)
+#' JMR.res=JMR(otu_tab = input_tab[1:10,],long_design = long_design,logistic_design = logistic_design,
+#' outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)',
+#' tune=0.1,cov.taxa=TRUE,n.cores=2)
 
 
 
 JMR<-function(otu_tab,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,
-                  tune=seq(0.05,0.15,0.05),cov.taxa=T){
+                  tune=seq(0.05,0.15,0.05),cov.taxa=T,n.cores=NULL){
 
   
 if(nrow(otu_tab)==1){
@@ -80,7 +83,7 @@ if(length(tune)>1){
   cv=NULL
   for(rho in tune){
     cat('shrinkage=',rho,'\n')
-    cv_val=cv.JMR(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,cov.taxa,shrinkage=rho)
+    cv_val=cv.JMR(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,cov.taxa,shrinkage=rho,n.cores)
     cv=rbind(cv,cv_val)
   }
 
@@ -167,7 +170,7 @@ for(i in 1:n_otu){
   }else{others_pres_input=NULL}
   }else{others_pres_input=others_pres}
 
-  res=JMR_core(taxa,others_abun_input,others_pres_input,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=F)
+  res=JMR_core(taxa,others_abun_input,others_pres_input,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=F,n.cores)
   
   res_lambda=rbind(res_lambda,as.numeric(c(res$Main_coef['composition_lambda',-5],res$Main_coef['presence_lambda',-5])))
 

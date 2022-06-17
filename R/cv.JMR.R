@@ -1,6 +1,6 @@
 
  
-cv.JMR<-function(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,cov.taxa=T,shrinkage=0.1){
+cv.JMR<-function(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,cov.taxa=T,shrinkage=0.1,n.cores=NULL){
 
   set_ids=unique(logistic_idset[,2])
   n_set=length(set_ids)
@@ -75,7 +75,7 @@ cv.JMR<-function(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,l
         
         
         joint.res=JMR_core(taxa = tr_taxa,others_abun=tr_others_abun,others_pres=tr_others_pres,long_design = tr_long_design,logistic_design = tr_logistic_design,
-                      outcome = tr_outcome,long_idset = tr_long_idset,logistic_idset = tr_logistic_idset,rand.var,shrinkage ,trace = F)
+                      outcome = tr_outcome,long_idset = tr_long_idset,logistic_idset = tr_logistic_idset,rand.var,shrinkage ,trace = F,n.cores)
         
         if(is.null(tr_others_abun) & is.null(tr_others_pres)){
           all_coef=as.numeric(c(joint.res$Main_coef$Estimate))
@@ -120,7 +120,7 @@ cv.JMR<-function(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,l
       tr_others_pres=t_others_pres=NULL
       
       joint.res=JMR_core(taxa = tr_taxa,others_abun=tr_others_abun,others_pres=tr_others_pres,long_design = tr_long_design,logistic_design = tr_logistic_design,
-                    outcome = tr_outcome,long_idset = tr_long_idset,logistic_idset = tr_logistic_idset,rand.var,shrinkage ,trace = F)
+                    outcome = tr_outcome,long_idset = tr_long_idset,logistic_idset = tr_logistic_idset,rand.var,shrinkage ,trace = F,n.cores)
       
       if(is.null(tr_others_abun) & is.null(tr_others_pres)){
         all_coef=as.numeric(c(joint.res$Main_coef$Estimate))
