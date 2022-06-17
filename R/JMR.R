@@ -14,6 +14,33 @@
 #'          \item{$rho}{Tuning parameter value.}
 #' @import optimParallel
 #' @export
+#' @examples
+#' data("DM_MLE")
+#' 
+#' #Generate set indicator and disease outcome
+#' meta_data<-StatSim(n=150)
+#' meta_data<-meta_data[order(meta_data$set,meta_data$id),]
+#' subj_data<-unique(meta_data[,c('id','outcome')])
+#' outcome<-subj_data$outcome
+#' names(outcome)<-subj_data$id
+#' long_design <- model.matrix(~age,meta_data)
+#' logistic<-unique(subset(meta_data,select = -c(age,ageset.id)))
+#' rownames(logistic)=logistic$id
+#' logistic_design <- model.matrix(~genetic,logistic)
+#' long_idset <- meta_data[,c('id','set','order')]
+#' logistic_idset <- logistic[,c('id','set','order')]
+#' 
+#' #Generate metagenomic raw counts table with dimension P=10 (e.g. at phylum level).
+#' raw.counts=TaxaSim(DM_MLE[1:10],StatSim = meta_data,shift_subject = 0,trace =F)
+#' rel.abun=t(t(raw.counts)/colSums(raw.counts))
+#' 
+#' #Filter taxa by relative abundance and prevalence
+#' mean.rel.abun=rowMeans(rel.abun)
+#' filter=mean.rel.abun>1e-6 & rowSums(rel.abun==0)<0.95*ncol(rel.abun)
+#' input_tab=rel.abun[filter,]
+#' 
+#' #Run JMR without tuning and covariate taxa on a low-dimension  microbiota. 
+#' JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', tune=0.1,cov.taxa=F)
 
 
 
@@ -149,10 +176,10 @@ for(i in 1:n_otu){
 
 colnames(res_lambda)=c('rabun_coef','rabun_se','rabun_t','rabun_p','pres_coef','pres_se','pres_t','pres_p')
 rownames(res_lambda)=rownames(otu_tab)
-joint.p=pchisq(as.numeric(res_lambda[,'rabun_t'])^2+as.numeric(res_lambda[,'pres_t'])^2,df = 2,lower.tail = F)
-FDR=p.adjust(joint.p,method = 'BH')
+joint.pvalue=pchisq(as.numeric(res_lambda[,'rabun_t'])^2+as.numeric(res_lambda[,'pres_t'])^2,df = 2,lower.tail = F)
+FDR=p.adjust(joint.pvalue,method = 'BH')
 res_lambda=as.data.frame(res_lambda)
-res_lambda$joint.p=joint.p
+res_lambda$joint.pvalue=joint.pvalue
 res_lambda$FDR=FDR
 output=list(test.result=res_lambda,rho=shrinkage)
 return(output)
