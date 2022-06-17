@@ -1,60 +1,160 @@
+
+#' @title Joint model with Matching and Regularization (JMR)
+#' @description This function test trajectory (either intercept or slope) association with disease outcome in matched sets.
+#' @param otu_tab A table of relative abundance with rows as OTUs and columns as samples. 
+#' @param long_design A numeric vector for taxa filters, specified in the order of c(minimum relative abundance, minimum prevalence )
+#' @param logistic_design A character vector for set and subject identifiers in DataPrep$meta_data, in the order of c(set ID, subject ID)
+#' @param outcome A character for disease outcome variable in DataPrep$meta_data.
+#' @param long_idset Name of the covariate representing age (or time point) for each sample.
+#' @param logistic_idset Names of the covariates in disease sub-model.
+#' @param rand.var Names of the covariates used in OTU sub-models.
+#' @param tune The type of trajectory analysis: intercept or slope.
+#' @param cov.taxa Whether to adjust for covariate taxa. 
+#' @return  \item{$test.result}{The result of joint test on relative abundance and presence.}
+#'          \item{$rho}{Tuning parameter value.}
+#' @import optimParallel
 #' @export
 
-JMR<-function(taxa,others_abun,others_pres,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=T){
-  require(parallel)
-  require(optimParallel)
-  require(HelpersMG)
+
+
+JMR<-function(otu_tab,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,
+                  tune=seq(0.05,0.15,0.05),cov.taxa=T){
+
   
-  
-  long_dim<<-ncol(long_design)
-  logistic_dim<<-ncol(logistic_design)
-  quad.n<<-3
-  Q<<-quad.n^3
-  nw <<- mvQuad::createNIGrid(dim=3, type="GHe", level=quad.n)
-  
-  if(is.null(others_abun)){
-    P_others_abun=0
+if(nrow(otu_tab)==1){
+  stop('Input is not a table')
+}
+    
+otu_tab=as.matrix(otu_tab)
+mean.abun=rowMeans(otu_tab)
+dist.abun <- as.matrix(vegan::vegdist(otu_tab,method = "bray"))
+dist.pres <- as.matrix(vegan::vegdist(otu_tab,method = "bray",binary = T))
+d_abun=quantile(dist.abun[dist.abun!=0],probs = 0.1)
+d_pres=quantile(dist.pres[dist.pres!=0],probs = 0.1)
+
+# cross-validation
+if(length(tune)>1){
+  filter=which(mean.abun>0.1)
+  if(length(filter)>0){
+  otu_id1=sample(filter,size = 1)
+  } else{otu_id1=NULL}
+  filter=which(mean.abun>0.01 & mean.abun<0.1)
+  if(length(filter)>0){
+  otu_id2=sample(filter,size = 1)
+  }else{otu_id2=NULL}
+  filter=which(mean.abun>0.001 & mean.abun<0.01)
+  otu_id3=sample(filter,size = 1)
+  filter=which(mean.abun>0.0001 & mean.abun<0.001)
+  otu_id4=sample(filter,size = 1)
+  filter=which(mean.abun>0.00001 & mean.abun<0.0001)
+  otu_id5=sample(filter,size = 1)
+  otu_id=c(otu_id1,otu_id2,otu_id3,otu_id4,otu_id5)
+
+  cv=NULL
+  for(rho in tune){
+    cat('shrinkage=',rho,'\n')
+    cv_val=cv.JMR(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,cov.taxa,shrinkage=rho)
+    cv=rbind(cv,cv_val)
+  }
+
+  mean.pllk=rowMeans(cv)
+  names(mean.pllk)=tune
+  cvg=mean.pllk[-1]/mean.pllk[-length(mean.pllk)]
+  if(max(cvg>1)){
+   rho_opt=tune[mean.pllk==max(mean.pllk)]
+   shrinkage=rho_opt
+  }else if(sum(cvg>0.98 & cvg<1)>0){
+    sl=min(which(cvg>0.98 & cvg<1))
+    rho_opt=as.numeric(names(cvg)[sl])
+    shrinkage=rho_opt
+  }else{shrinkage=max(tune)}
+}else{shrinkage=tune}
+cat('shrinkage.optim=',shrinkage,'\n')
+
+
+
+n_otu=nrow(otu_tab)
+res_lambda=NULL
+for(i in 1:n_otu){
+  if(cov.taxa==F){
+    limit_abun=0
+    others_abun=NULL
+    limit_pres=0
+    others_pres=NULL
   }else{ 
-    P_others_abun=ncol(others_abun)
+    
+  dist_abun_i=dist.abun[i,][-i]
+  dist_pres_i=dist.pres[i,][-i]
+  if(min(dist_abun_i)<d_abun){
+  limit_abun=min(50,sum(dist_abun_i<d_abun))
+  id_abun=order(dist.abun[i,],decreasing = F)[1+(1:limit_abun)]
+    
+  if(length(id_abun)>1){
+    others_abun=t(otu_tab[id_abun,])
+  }else{others_abun=as.matrix(otu_tab[id_abun,])}
+  }else{
+    limit_abun=0
+    others_abun=NULL
   }
   
-  if(is.null(others_pres)){
-    P_others_pres=0
-  }else{ 
-    P_others_pres=ncol(others_pres)
+  if(min(dist_pres_i)<d_pres){
+    limit_pres=min(50,sum(dist_pres_i<d_pres))
+    id_pres=order(dist.pres[i,],decreasing = F)[1+(1:limit_pres)]
+    if(length(id_pres)>1){
+    others_pres=t(otu_tab[id_pres,])
+    }else{others_pres=as.matrix(otu_tab[id_pres,])}
+  } else{
+    limit_pres=0
+    others_pres=NULL
   }
   
-  P<-P_others_abun+P_others_pres+2*long_dim+logistic_dim+8
-  
-  cl <- parallel::makeCluster(detectCores()-1,setup_strategy = "sequential")     # set the number of processor cores
-  parallel::clusterExport(cl, list('quad.n','nw','Q',"llh_match", "lh1_match", "lh2_match", "long_dim", "logistic_dim"))
-  
-  parallel::setDefaultCluster(cl=cl) # set 'cl' as default cluster
-  par.ini=c(composition_others=rep(0,P_others_abun),presence_others=rep(0,P_others_pres),composition_beta=rep(0,long_dim),composition_lambda=0,composition_gamma=0,presence_beta=rep(0,long_dim),presence_lambda=0,presence_gamma=0,outcome_alpha=rep(0,logistic_dim),dispersion=1,variance_a=1,variance_b=1)
-  
-    m=optimParallel::optimParallel(par.ini,llh_match,others_abun=others_abun,others_pres=others_pres,taxa=taxa,long_design=long_design,logistic_design=logistic_design,outcome=outcome,long_idset=long_idset,logistic_idset=logistic_idset,rand.var=rand.var,t=shrinkage,
-                                   lower = c(rep(-Inf,(P-3)),1e-05,1e-05,1e-05),upper=rep(Inf,P),method = 'L-BFGS-B',hessian = T,parallel = list(forward=T),control = list(ndeps=rep(5*1e-7,length(par.ini))))
-    pn.llh=-m$value
-  
-  parallel::stopCluster(cl)
-  
-  se.coef = HelpersMG::SEfromHessian(m$hessian)
-  se.coef[se.coef<1e-6]<-1e-6
-  tval = m$par/se.coef
-  p.value=pchisq(tval^2,1,lower.tail = F)
-  significance=ifelse(p.value<0.1 & p.value>0.05,'.',ifelse(p.value<0.05 & p.value>0.01,'*',ifelse(p.value<0.01 & p.value>0.001,'**',
-                                                                                                   ifelse(p.value<0.001 & p.value>0.0001,'***',ifelse(p.value<0.0001,'****','')))))
-  matcoef = cbind(m$par, se.coef, tval, p.value,significance)
-  
-  dimnames(matcoef) = list(names(par.ini), c("Estimate", "Std. Error", "t value", "Wald P-value"," "))
-  
-  if(trace){
-    print(matcoef,quote = F)
   }
   
-  if(is.null(others_abun) & is.null(others_pres)){
-    return(list(Main_coef=as.data.frame(matcoef),LogLikelihood=-m$value))
-  }else{            
-    return(list(Others_coef=as.data.frame(matcoef[1:(P_others_abun+P_others_pres),]),Main_coef=as.data.frame(matcoef[-(1:(P_others_abun+P_others_pres)),]),LogLikelihood=-m$value))
+  taxa=otu_tab[i,]
+  cat('Taxon', i, ':',rownames(otu_tab)[i],'Correlated taxa:',limit_abun,',',limit_pres,'\n')
+  cat('Mean relative abundance:',mean(taxa),'\t')
+  cat('Prevalence:',sum(taxa>0)/length(taxa),'\n')
+  
+  if(limit_abun>4){
+  taxa_tr=asin(sqrt(taxa))
+  set.seed(321)
+  cvfit.abun = glmnet::cv.glmnet(others_abun, taxa_tr,alpha=0.05,nfolds = 10,family='gaussian')
+  select=cvfit.abun$lambda==cvfit.abun$lambda.min
+  beta_abun=cvfit.abun$glmnet.fit$beta[,select]
+  others_abun_input=as.matrix(others_abun[,beta_abun!=0])
+  if(ncol(others_abun_input)==0){others_abun_input=NULL}
+  }else{others_abun_input=others_abun}
+
+  if(limit_pres>4){
+  if(sum(taxa==0)>0.02*length(taxa)){
+  taxa_bin=ifelse(taxa==0,0,1)
+  others_pres=ifelse(others_pres==0,0,1)
+  if(sum(rowSums(others_pres==0)>0)>0.1*nrow(others_pres)){
+  set.seed(321)
+  cvfit.pres = glmnet::cv.glmnet(others_pres, taxa_bin,alpha=0.05,nfolds = 10,family='binomial')
+  select=cvfit.pres$lambda==cvfit.pres$lambda.min
+  beta_pres=cvfit.pres$glmnet.fit$beta[,select]
+  others_pres_input=as.matrix(others_pres[,beta_pres!=0])
+  if(ncol(others_pres_input)==0){others_pres_input=NULL}
+  }else{others_pres_input=NULL}
+  }else{others_pres_input=NULL}
+  }else{others_pres_input=others_pres}
+
+  res=JMR_core(taxa,others_abun_input,others_pres_input,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=F)
+  
+  res_lambda=rbind(res_lambda,as.numeric(c(res$Main_coef['composition_lambda',-5],res$Main_coef['presence_lambda',-5])))
+
   }
-}  
+
+
+colnames(res_lambda)=c('rabun_coef','rabun_se','rabun_t','rabun_p','pres_coef','pres_se','pres_t','pres_p')
+rownames(res_lambda)=rownames(otu_tab)
+joint.p=pchisq(as.numeric(res_lambda[,'rabun_t'])^2+as.numeric(res_lambda[,'pres_t'])^2,df = 2,lower.tail = F)
+FDR=p.adjust(joint.p,method = 'BH')
+res_lambda=as.data.frame(res_lambda)
+res_lambda$joint.p=joint.p
+res_lambda$FDR=FDR
+output=list(test.result=res_lambda,rho=shrinkage)
+return(output)
+
+}
