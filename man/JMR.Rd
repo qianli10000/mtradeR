@@ -13,7 +13,8 @@ JMR(
   logistic_idset,
   rand.var,
   tune = seq(0.05, 0.15, 0.05),
-  cov.taxa = T
+  cov.taxa = T,
+  n.cores = NULL
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ JMR(
 \item{tune}{The type of trajectory analysis: intercept or slope.}
 
 \item{cov.taxa}{Whether to adjust for covariate taxa.}
+
+\item{n.cores}{Number of workers registered in parallel computing.}
 }
 \value{
 \item{$test.result}{The result of joint test on relative abundance and presence.}
@@ -46,7 +49,7 @@ This function test trajectory (either intercept or slope) association with disea
 data("DM_MLE")
 
 #Generate set indicator and disease outcome
-meta_data<-StatSim(n=150)
+meta_data<-StatSim(n=50)
 meta_data<-meta_data[order(meta_data$set,meta_data$id),]
 subj_data<-unique(meta_data[,c('id','outcome')])
 outcome<-subj_data$outcome
@@ -59,7 +62,7 @@ long_idset <- meta_data[,c('id','set','order')]
 logistic_idset <- logistic[,c('id','set','order')]
 
 #Generate metagenomic raw counts table with dimension P=10 (e.g. at phylum level).
-raw.counts=TaxaSim(DM_MLE[1:10],StatSim = meta_data,shift_subject = 0,trace =F)
+raw.counts=TaxaSim(DM_MLE,StatSim = meta_data,shift_subject = 0,trace =FALSE)
 rel.abun=t(t(raw.counts)/colSums(raw.counts))
 
 #Filter taxa by relative abundance and prevalence
@@ -68,5 +71,7 @@ filter=mean.rel.abun>1e-6 & rowSums(rel.abun==0)<0.95*ncol(rel.abun)
 input_tab=rel.abun[filter,]
 
 #Run JMR without tuning and covariate taxa on a low-dimension  microbiota. 
-JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', tune=0.1,cov.taxa=F)
+JMR.res=JMR(otu_tab = input_tab[1:10,],long_design = long_design,logistic_design = logistic_design,
+outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)',
+tune=0.1,cov.taxa=TRUE,n.cores=2)
 }
