@@ -19,7 +19,7 @@ data("DM_MLE")
 
 #Generate set indicator and disease outcome
 
-meta_data<-StatSim(n=150)
+meta_data<-StatSim(n=100)
 
 meta_data<-meta_data[order(meta_data$set,meta_data$id),]
 
