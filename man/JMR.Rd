@@ -20,21 +20,21 @@ JMR(
 \arguments{
 \item{otu_tab}{A table of relative abundance with rows as OTUs and columns as samples.}
 
-\item{long_design}{A numeric vector for taxa filters, specified in the order of c(minimum relative abundance, minimum prevalence )}
+\item{long_design}{Design matrix for longitudinal variables in the abundance-presence sub-model.}
 
-\item{logistic_design}{A character vector for set and subject identifiers in DataPrep$meta_data, in the order of c(set ID, subject ID)}
+\item{logistic_design}{Design matrix for risk factors in the disease sub-model.}
 
-\item{outcome}{A character for disease outcome variable in DataPrep$meta_data.}
+\item{outcome}{A vector of disease outcome per subject.}
 
-\item{long_idset}{Name of the covariate representing age (or time point) for each sample.}
+\item{long_idset}{Specify the set and subject identifier names in long_design, in the order of c(set_ID, subject_ID)}
 
-\item{logistic_idset}{Names of the covariates in disease sub-model.}
+\item{logistic_idset}{Specify the set and subject identifier names in logistic_design, in the order of c(set_ID, subject_ID)}
 
-\item{rand.var}{Names of the covariates used in OTU sub-models.}
+\item{rand.var}{The type of trajectory analysis, intercept: '(Intercept)', or slope: 'age'.}
 
-\item{tune}{The type of trajectory analysis: intercept or slope.}
+\item{tune}{A scalar or vector of tuning parameter for L2 regularization. If otu_tab contains <10 rows (OTUs), tune must be a scalar.}
 
-\item{cov.taxa}{Whether to adjust for covariate taxa.}
+\item{cov.taxa}{Whether to adjust for interdependence between taxa, default as cov.taxa=TRUE. If otu_tab contains only one row (OTU), cov.taxa must be FALSE.}
 
 \item{n.cores}{Number of workers registered in parallel computing.}
 }
@@ -49,7 +49,7 @@ This function test trajectory (either intercept or slope) association with disea
 data("DM_MLE")
 
 #Generate set indicator and disease outcome
-meta_data<-StatSim(n=50)
+meta_data<-StatSim(n=4,tps=2)
 meta_data<-meta_data[order(meta_data$set,meta_data$id),]
 subj_data<-unique(meta_data[,c('id','outcome')])
 outcome<-subj_data$outcome
@@ -61,8 +61,8 @@ logistic_design <- model.matrix(~genetic,logistic)
 long_idset <- meta_data[,c('id','set','order')]
 logistic_idset <- logistic[,c('id','set','order')]
 
-#Generate metagenomic raw counts table with dimension P=10 (e.g. at phylum level).
-raw.counts=TaxaSim(DM_MLE,StatSim = meta_data,shift_subject = 0,trace =FALSE)
+#Generate a toy example of metagenomic raw counts table with dimension P=20.
+raw.counts=TaxaSim(DM_MLE[1:20],StatSim = meta_data,shift_subject = 0,trace =FALSE)
 rel.abun=t(t(raw.counts)/colSums(raw.counts))
 
 #Filter taxa by relative abundance and prevalence
@@ -70,8 +70,8 @@ mean.rel.abun=rowMeans(rel.abun)
 filter=mean.rel.abun>1e-6 & rowSums(rel.abun==0)<0.95*ncol(rel.abun)
 input_tab=rel.abun[filter,]
 
-#Run JMR without tuning and covariate taxa on a low-dimension  microbiota. 
-JMR.res=JMR(otu_tab = input_tab[1:10,],long_design = long_design,logistic_design = logistic_design,
+#Run JMR without tuning and covariate taxa for the first OTU. 
+JMR.res=JMR(otu_tab = input_tab[1,],long_design = long_design,logistic_design = logistic_design,
 outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)',
-tune=0.1,cov.taxa=TRUE,n.cores=2)
+tune=0.1,cov.taxa=FALSE,n.cores=1)
 }
