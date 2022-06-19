@@ -10,39 +10,25 @@ Below is an exmaple code for running the simulation pipeline and test JointMatch
 
 ```{r}
 install.packages("devtools")
-
 library(devtools)
-
 install_github('qianli10000/mtradeR')
-
 library('mtradeR')
-
 data("DM_MLE")
 ```
 
-Generate set indicator and disease outcome
+Generate set indicator and disease outcome, format design matrix
 
 ```{r}
 meta_data<-StatSim(n=100)
-
 meta_data<-meta_data[order(meta_data$set,meta_data$id),]
-
 subj_data<-unique(meta_data[,c('id','outcome')])
-
 outcome<-subj_data$outcome
-
 names(outcome)<-subj_data$id
-
 long_design <- model.matrix(~age,meta_data)
-
 logistic<-unique(subset(meta_data,select = -c(age,ageset.id)))
-
 rownames(logistic)=logistic$id
-
 logistic_design <- model.matrix(~genetic,logistic)
-
 long_idset <- meta_data[,c('id','set','order')]
-
 logistic_idset <- logistic[,c('id','set','order')]
 ```
 
@@ -50,7 +36,6 @@ Generate metagenomic raw counts table
 
 ```{r}
 raw.counts=TaxaSim(DM_MLE,StatSim = meta_data,shift_subject = 0.8,trace =F)
-
 rel.abun=t(t(raw.counts)/colSums(raw.counts))
 ```
 
@@ -58,9 +43,7 @@ Filter taxa by relative abundance and prevalence
 
 ```{r}
 mean.rel.abun=rowMeans(rel.abun)
-
 filter=mean.rel.abun>1e-6 & rowSums(rel.abun==0)<0.95*ncol(rel.abun)
-
 input_tab=rel.abun[filter,]
 ```
 
