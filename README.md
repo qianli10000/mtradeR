@@ -1,7 +1,7 @@
 # mtradeR 
 Metagenomic TRajectory Analysis with Disease Endpoint and Risk factors. 
 
-We proposed a Joint model with Matching and Regularization (JMR) to detect OTUs predictive of hosts’ disease status in matched sets. We also designed and implemented a simulation pipeline to generate disease outcome and temporal high-dimensional metagenomic counts in matched sets. A preprint is available at https://www.biorxiv.org/content/10.1101/2022.04.19.488854v1.full.
+We proposed a Joint model with Matching and Regularization (JMR) to detect OTUs predictive of hosts’ disease status in matched sets. We also designed and implemented a simulation pipeline to generate disease outcome and temporal high-dimensional metagenomic counts in matched sets. A preprint is available at https://www.biorxiv.org/content/10.1101/2022.04.19.488854v2
 
 # An example
 
