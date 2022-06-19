@@ -110,12 +110,14 @@ llh_match<-function(par_all,taxa,others_abun,others_pres,long_design,logistic_de
   gh.nodes_set1_sub=gh.nodes_set1[1:logistic.size1,]
   gh.nodes_set2_sub=gh.nodes_set2[1:logistic.size2,]
   
+  llkh1_1=log(lh1_match(taxa_1,long_design_1,others_abun_1,others_pres_1,gh.nodes1*sig_sub*X_rand1*sqrt(2),gh.nodes_set1*sig_set*X_rand1*sqrt(2),beta1,beta01,beta2,beta02,lamda1,lamda2,gamma1,gamma2,phi))
+  llkh2_1=log(lh2_match(outcome_1,logistic_design_1,gh.nodes1_sub*sig_sub*sqrt(2),gh.nodes_set1_sub*sig_set*sqrt(2),alph))
+  llkh1_2=log(lh1_match(taxa_2,long_design_2,others_abun_2,others_pres_2,gh.nodes2*sig_sub*X_rand2*sqrt(2),gh.nodes_set2*sig_set*X_rand2*sqrt(2),beta1,beta01,beta2,beta02,lamda1,lamda2,gamma1,gamma2,phi))
+  llkh2_2=log(lh2_match(outcome_2,logistic_design_2,gh.nodes2_sub*sig_sub*sqrt(2),gh.nodes_set2_sub*sig_set*sqrt(2),alph))
   
-  joint.logl_1=prod.mat1%*%log(lh1_match(taxa_1,long_design_1,others_abun_1,others_pres_1,gh.nodes1*sig_sub*X_rand1*sqrt(2),gh.nodes_set1*sig_set*X_rand1*sqrt(2),beta1,beta01,beta2,beta02,lamda1,lamda2,gamma1,gamma2,phi))+
-    log(lh2_match(outcome_1,logistic_design_1,gh.nodes1_sub*sig_sub*sqrt(2),gh.nodes_set1_sub*sig_set*sqrt(2),alph))
-  joint.logl_2=prod.mat2%*%log(lh1_match(taxa_2,long_design_2,others_abun_2,others_pres_2,gh.nodes2*sig_sub*X_rand2*sqrt(2),gh.nodes_set2*sig_set*X_rand2*sqrt(2),beta1,beta01,beta2,beta02,lamda1,lamda2,gamma1,gamma2,phi))+
-    log(lh2_match(outcome_2,logistic_design_2,gh.nodes2_sub*sig_sub*sqrt(2),gh.nodes_set2_sub*sig_set*sqrt(2),alph))
-  
+  joint.logl_1=tcrossprod(prod.mat1,t(llkh1_1))+llkh2_1
+  joint.logl_2=tcrossprod(prod.mat2,t(llkh1_2))+llkh2_2
+    
   
   l=-log(rowSums(gh.weights*exp(joint.logl_1+joint.logl_2)))  
   

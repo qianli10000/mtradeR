@@ -8,7 +8,7 @@
 #' @export
 
 TaxaSim<-function(base_par,StatSim, shift_subject=0, library.size=100000,min.lib=10000,trace=TRUE){
-
+  cat('It may take a while to generate metagenomes...','\n')
   G=length(base_par)
   disp=1/(sum(base_par)+1)
   pi_i=colMeans(dirmult::rdirichlet(50,(base_par*disp*(1-0.04)/((1-disp)*0.04))))

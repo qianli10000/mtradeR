@@ -7,10 +7,10 @@ lh1_match<-function(y,x,others_abun,others_pres,rand_sub,rand_set,beta1,beta01,b
   y=as.numeric(y)
   beta1m=matrix(rep(beta1,Q),ncol = Q)
   if(is.null(others_abun)){
-    mu=1/(1+exp(-(crossprod(t(x),beta1m)+lamda1*rand_sub+gamma1*rand_set)))
+    mu=1/(1+exp(-(tcrossprod(x,t(beta1m))+lamda1*rand_sub+gamma1*rand_set)))
   }else {
     beta01m=matrix(rep(beta01,Q),ncol = Q)
-    mu=1/(1+exp(-(crossprod(t(others_abun),beta01m)+crossprod(t(x),beta1m)+lamda1*rand_sub+gamma1*rand_set)))
+    mu=1/(1+exp(-(tcrossprod(others_abun,t(beta01m))+tcrossprod(x,t(beta1m))+lamda1*rand_sub+gamma1*rand_set)))
   }
   mu[mu<1e-10]=1e-10
   mu[mu>(1-1e-10)]=1-1e-10
@@ -22,10 +22,10 @@ lh1_match<-function(y,x,others_abun,others_pres,rand_sub,rand_set,beta1,beta01,b
   
   beta2m=matrix(rep(beta2,Q),ncol = Q)
   if(is.null(others_pres)){
-    presence=1/(1+exp(-(crossprod(t(x), beta2m)+lamda2*rand_sub+gamma2*rand_set)))
+    presence=1/(1+exp(-(tcrossprod(x, t(beta2m))+lamda2*rand_sub+gamma2*rand_set)))
   } else {
     beta02m=matrix(rep(beta02,Q),ncol = Q)
-    presence=1/(1+exp(-(crossprod(t(others_pres),beta02m)+crossprod(t(x),beta2m)+lamda2*rand_sub+gamma2*rand_set)))
+    presence=1/(1+exp(-(tcrossprod(others_pres,t(beta02m))+tcrossprod(x,t(beta2m))+lamda2*rand_sub+gamma2*rand_set)))
   }
   
   presence[presence<1e-4]=1e-4
