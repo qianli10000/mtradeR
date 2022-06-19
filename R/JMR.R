@@ -55,7 +55,8 @@ JMR<-function(otu_tab,long_design,logistic_design,outcome,long_idset,logistic_id
 if(is.null(nrow(otu_tab))){
   otu_tab=matrix(otu_tab,nrow=1)
 }
-  otu_tab=as.matrix(otu_tab)  
+  otu_tab=as.matrix(otu_tab)
+  mean.abun=rowMeans(otu_tab)
 
 # cross-validation
 if(length(tune)>1){
@@ -107,7 +108,7 @@ for(i in 1:n_otu){
     limit_pres=0
     others_pres=NULL
   }else{ 
-  mean.abun=rowMeans(otu_tab)
+  
   dist.abun <- as.matrix(vegan::vegdist(otu_tab,method = "bray"))
   dist.pres <- as.matrix(vegan::vegdist(otu_tab,method = "bray",binary = T))
   d_abun=quantile(dist.abun[dist.abun!=0],probs = 0.1)
