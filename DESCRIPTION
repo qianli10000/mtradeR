@@ -1,6 +1,6 @@
 Package: mtradeR
 Title: Metagenomic Trajectory Analysis with Disease Endpoint and Risk Factors 
-Version: 0.0.1
+Version: 0.1.99
 Authors@R: 
     person("Qian", "Li", , "qian.li10000@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9874-3555"))

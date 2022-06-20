@@ -90,6 +90,7 @@ llh_match<-function(par_all,taxa,others_abun,others_pres,long_design,logistic_de
     ifelse(long_id[long_order==2]==x,1,0)
   }))
   
+  
   long_design_1=long_design[long_order==1,]
   long_design_2=long_design[long_order==2,]
   X_rand1<-long_design_1[,rand.var]
