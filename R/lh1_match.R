@@ -4,6 +4,7 @@
 lh1_match<-function(y,x,others_abun,others_pres,rand_sub,rand_set,beta1,beta01,beta2,beta02,lamda1,lamda2,gamma1,gamma2,phi){
   quad.n<-3
   Q<-quad.n^3
+  
   y=as.numeric(y)
   beta1m=matrix(rep(beta1,Q),ncol = Q)
   if(is.null(others_abun)){
