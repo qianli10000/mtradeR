@@ -181,8 +181,6 @@ for(i in 1:n_otu){
   }else{others_pres_input=NULL}
   }else{others_pres_input=others_pres}
 
-
- # set 'cl' as default cluster
   
   res=JMR_core(taxa,others_abun_input,others_pres_input,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=F,n.cores)
   
