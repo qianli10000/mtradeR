@@ -6,7 +6,7 @@ We proposed a Joint model with Matching and Regularization (JMR) to detect OTUs 
 
 # An example
 
-Below is an exmaple code for running the simulation pipeline and test JointMatch:
+Below is an exmaple code for running the simulation pipeline and test JMR.
 
 ```{r}
 install.packages("devtools")
@@ -59,7 +59,7 @@ Run JMR for slope test without tuning, setting shrinkage at 0.15
 JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = 'age', tune=0.15,cov.taxa=TRUE)
 ```
 
-Run JMR for intercept test with tuning but without covariate taxa
+Run JMR for intercept test with tuning but without selecting covariate taxa
 
 ```{r}
 JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', tune=seq(0.05,0.15,0.05),cov.taxa=FALSE)
