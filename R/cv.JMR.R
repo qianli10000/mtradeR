@@ -73,7 +73,7 @@ cv.JMR<-function(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,l
           tr_others_pres=t_others_pres=NULL
         }
         
-        
+       
         joint.res=JMR_core(taxa = tr_taxa,others_abun=tr_others_abun,others_pres=tr_others_pres,long_design = tr_long_design,logistic_design = tr_logistic_design,
                       outcome = tr_outcome,long_idset = tr_long_idset,logistic_idset = tr_logistic_idset,rand.var,shrinkage ,trace = F,n.cores)
         
@@ -82,9 +82,9 @@ cv.JMR<-function(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,l
         }else{
           all_coef=as.numeric(c(joint.res$Others_coef$Estimate,joint.res$Main_coef$Estimate))
         }
-        
-        test.llh=-llh_match(par_all = all_coef,t_taxa,t_others_abun,t_others_pres,t_long_design,t_logistic_design,
-                            t_outcome,t_long_idset,t_logistic_idset,rand.var,shrinkage)
+        t_prep.data=prep(t_taxa,t_others_abun,t_others_pres,t_long_design,t_logistic_design,
+                         t_outcome,t_long_idset,t_logistic_idset,rand.var)
+        test.llh=-llh_match(par_all = all_coef,t_prep.data,shrinkage)
         
         llh_t=c(llh_t,test.llh)
         cat('Validation Fold',f,';','Penalized likelihood:',test.llh,'\n')
@@ -128,8 +128,9 @@ cv.JMR<-function(otu_tab,otu_id,long_design,logistic_design,outcome,long_idset,l
         all_coef=as.numeric(c(joint.res$Others_coef$Estimate,joint.res$Main_coef$Estimate))
       }
       
-      test.llh=-llh_match(par_all = all_coef,t_taxa,t_others_abun,t_others_pres,t_long_design,t_logistic_design,
-                          t_outcome,t_long_idset,t_logistic_idset,rand.var,shrinkage)
+      t_prep.data=prep(t_taxa,t_others_abun,t_others_pres,t_long_design,t_logistic_design,
+                       t_outcome,t_long_idset,t_logistic_idset,rand.var)
+      test.llh=-llh_match(par_all = all_coef,t_prep.data,shrinkage)
       
       llh_t=c(llh_t,test.llh)
       cat('Validation Fold',f,';','Penalized likelihood:',test.llh,'\n')

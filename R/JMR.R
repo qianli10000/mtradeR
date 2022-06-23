@@ -57,7 +57,15 @@ if(is.null(nrow(otu_tab))){
 }
   otu_tab=as.matrix(otu_tab)
   mean.abun=rowMeans(otu_tab)
-
+ 
+   if(is.null(n.cores)){
+    n.cores=min(parallel::detectCores()-1,16)
+  }
+  
+  cl <- parallel::makeCluster(n.cores)     # set the number of processor cores
+  
+  parallel::setDefaultCluster(cl=cl) 
+ 
 # cross-validation
 if(length(tune)>1){
   filter=which(mean.abun>0.1)
@@ -149,6 +157,7 @@ for(i in 1:n_otu){
   taxa_tr=asin(sqrt(taxa))
   set.seed(321)
   cvfit.abun = glmnet::cv.glmnet(others_abun, taxa_tr,alpha=0.05,nfolds = 10,family='gaussian')
+ 
   select=cvfit.abun$lambda==cvfit.abun$lambda.min
   beta_abun=cvfit.abun$glmnet.fit$beta[,select]
   others_abun_input=as.matrix(others_abun[,beta_abun!=0])
@@ -159,9 +168,11 @@ for(i in 1:n_otu){
   if(sum(taxa==0)>0.02*length(taxa)){
   taxa_bin=ifelse(taxa==0,0,1)
   others_pres=ifelse(others_pres==0,0,1)
+  
   if(sum(rowSums(others_pres==0)>0)>0.1*nrow(others_pres)){
   set.seed(321)
   cvfit.pres = glmnet::cv.glmnet(others_pres, taxa_bin,alpha=0.05,nfolds = 10,family='binomial')
+  
   select=cvfit.pres$lambda==cvfit.pres$lambda.min
   beta_pres=cvfit.pres$glmnet.fit$beta[,select]
   others_pres_input=as.matrix(others_pres[,beta_pres!=0])
@@ -170,12 +181,16 @@ for(i in 1:n_otu){
   }else{others_pres_input=NULL}
   }else{others_pres_input=others_pres}
 
+
+ # set 'cl' as default cluster
+  
   res=JMR_core(taxa,others_abun_input,others_pres_input,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=F,n.cores)
   
   res_lambda=rbind(res_lambda,as.numeric(c(res$Main_coef['composition_lambda',-5],res$Main_coef['presence_lambda',-5])))
 
   }
 
+parallel::stopCluster(cl)
 
 colnames(res_lambda)=c('rabun_coef','rabun_se','rabun_t','rabun_p','pres_coef','pres_se','pres_t','pres_p')
 rownames(res_lambda)=rownames(otu_tab)
