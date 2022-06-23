@@ -19,21 +19,7 @@ JMR_core<-function(taxa,others_abun,others_pres,long_design,logistic_design,outc
     
     P<-P_others_abun+P_others_pres+2*long_dim+logistic_dim+8
     
-<<<<<<< HEAD
-    # if(is.null(n.cores)){
-    #   n.cores=min(parallel::detectCores()-1,16)
-    # }
-    # cl <- parallel::makeCluster(n.cores)     # set the number of processor cores
 
-  #parallel::setDefaultCluster(cl=cl) # set 'cl' as default cluster
-=======
-    if(is.null(n.cores)){
-    n.cores=min(parallel::detectCores()-1,16)
-    }
-    cl <- parallel::makeCluster(n.cores)     # set the number of processor cores
-    
-  parallel::setDefaultCluster(cl=cl) # set 'cl' as default cluster
->>>>>>> 54a163a8764e7463463f5d3cb7f735d320d7409e
   par.ini=c(composition_others=rep(0,P_others_abun),presence_others=rep(0,P_others_pres),composition_beta=rep(0,long_dim),composition_lambda=0,composition_gamma=0,presence_beta=rep(0,long_dim),presence_lambda=0,presence_gamma=0,outcome_alpha=rep(0,logistic_dim),dispersion=1,variance_a=1,variance_b=1)
   prep.data=prep(taxa,others_abun,others_pres,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var)
   
@@ -41,8 +27,6 @@ JMR_core<-function(taxa,others_abun,others_pres,long_design,logistic_design,outc
                                  lower = c(rep(-Inf,(P-3)),1e-05,1e-05,1e-05),upper=rep(Inf,P),method = 'L-BFGS-B',hessian = T,parallel = list(forward=T),control = list(ndeps=rep(5*1e-7,length(par.ini))))
   
   pn.llh=-m$value
-  
- #  parallel::stopCluster(cl)
   
   se.coef = HelpersMG::SEfromHessian(m$hessian)
   se.coef[se.coef<1e-6]<-1e-6
