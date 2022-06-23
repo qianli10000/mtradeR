@@ -85,11 +85,12 @@ llh_match<-function(par_all,taxa,others_abun,others_pres,long_design,logistic_de
   prod.mat1=t(sapply(unique(long_id[long_order==1]),FUN = function(x){
     ifelse(long_id[long_order==1]==x,1,0)
   }))
+  #prod.mat1=bdiag(prod.mat1)
   
   prod.mat2=t(sapply(unique(long_id[long_order==2]),FUN = function(x){
     ifelse(long_id[long_order==2]==x,1,0)
   }))
-  
+  #prod.mat2=bdiag(prod.mat2)
   
   long_design_1=long_design[long_order==1,]
   long_design_2=long_design[long_order==2,]

@@ -23,7 +23,7 @@ JMR_core<-function(taxa,others_abun,others_pres,long_design,logistic_design,outc
     n.cores=min(parallel::detectCores()-1,16)
     }
     cl <- parallel::makeCluster(n.cores)     # set the number of processor cores
-
+    
   parallel::setDefaultCluster(cl=cl) # set 'cl' as default cluster
   par.ini=c(composition_others=rep(0,P_others_abun),presence_others=rep(0,P_others_pres),composition_beta=rep(0,long_dim),composition_lambda=0,composition_gamma=0,presence_beta=rep(0,long_dim),presence_lambda=0,presence_gamma=0,outcome_alpha=rep(0,logistic_dim),dispersion=1,variance_a=1,variance_b=1)
   
