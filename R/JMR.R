@@ -124,7 +124,7 @@ for(i in 1:n_otu){
   dist_abun_i=dist.abun[i,][-i]
   dist_pres_i=dist.pres[i,][-i]
   if(min(dist_abun_i)<d_abun){
-  limit_abun=min(50,sum(dist_abun_i<d_abun))
+  limit_abun=min(25,sum(dist_abun_i<d_abun))
   id_abun=order(dist.abun[i,],decreasing = F)[1+(1:limit_abun)]
     
   if(length(id_abun)>1){
@@ -136,7 +136,7 @@ for(i in 1:n_otu){
   }
   
   if(min(dist_pres_i)<d_pres){
-    limit_pres=min(50,sum(dist_pres_i<d_pres))
+    limit_pres=min(25,sum(dist_pres_i<d_pres))
     id_pres=order(dist.pres[i,],decreasing = F)[1+(1:limit_pres)]
     if(length(id_pres)>1){
     others_pres=t(otu_tab[id_pres,])

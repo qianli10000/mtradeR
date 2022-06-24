@@ -65,7 +65,7 @@ llh_match<-function(par_all,input,shrinkage){
 
 
 prep<-function(taxa,others_abun,others_pres,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var){
-  quad.n<-3
+  quad.n<-5
   nw <- mvQuad::createNIGrid(dim=3, type="GHe", level=quad.n)
   
   long_dim<-ncol(long_design)
