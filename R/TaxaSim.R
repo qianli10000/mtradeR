@@ -69,9 +69,9 @@ TaxaSim<-function(base_par,StatSim, shift_subject=0, library.size=100000,min.lib
           sum4=lam2*(sum(pi_ijk_star[1:floor(G*0.5)])-sum(pi_ijk_star[1:floor(G*0.3)]))*(as.numeric(StatSim[k,]$Rand_sub.cut)-1)/(max(as.numeric(StatSim$Rand_sub.cut))-1)
           
           if(as.numeric(StatSim[k,]$Rand_sub.cut)==2){
-            rid=sample((floor(G*0.3)+1):floor(G),size = floor(G*0.3))
+            rid=sample((floor(G*0.3)+1):floor(G),size = floor(G*0.4))
             while(sum(pi_ijk_star[rid])<sum4){
-              rid=sample((floor(G*0.3)+1):floor(G),size = floor(G*0.3))
+              rid=sample((floor(G*0.3)+1):floor(G),size = floor(G*0.4))
             }
           }else{
             rid=(floor(G*0.3)+1):floor(G)
