@@ -12,7 +12,7 @@ TaxaSim<-function(base_par,StatSim, shift_subject=0, library.size=100000,min.lib
   
   G=length(base_par)
   disp=1/(sum(base_par)+1)
-  pi_i=colMeans(dirmult::rdirichlet(50,(base_par*disp*(1-0.04)/((1-disp)*0.04))))
+  pi_i=colMeans(dirmult::rdirichlet(150,(base_par*disp*(1-0.04)/((1-disp)*0.04))))
   otu.list=result.list.joint.onerand=result.list.joint.tworand=result.list.zibr.onerand=result.list.zibr.tworand=result.list.lmm.onerand=result.list.lmm.tworand=list()
 
     raw.counts=pi_star=pi_0=NULL
@@ -30,7 +30,7 @@ TaxaSim<-function(base_par,StatSim, shift_subject=0, library.size=100000,min.lib
       pi_i_star[(floor(G/2)+1):G]=pi_i_star[(floor(G/2)+1):G]-sum1*pi_i_star[(floor(G/2)+1):G]/sum(pi_i_star[(floor(G/2)+1):G])
 
       for(j in set_i){
-        pi_i_star_bar=colMeans(dirmult::rdirichlet(50,pi_i_star*(1-(0.05-0.005*(i-1)))/(0.05-0.005*(i-1))))
+        pi_i_star_bar=colMeans(dirmult::rdirichlet(150,pi_i_star*(1-(0.05-0.005*(i-1)))/(0.05-0.005*(i-1))))
 
         pi_ij_0=pi_i_star_bar
         

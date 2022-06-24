@@ -47,13 +47,13 @@ filter=mean.rel.abun>1e-6 & rowSums(rel.abun==0)<0.95*ncol(rel.abun)
 input_tab=rel.abun[filter,]
 ```
 
-Run JMR for intercept test without tuning, setting shrinkage at 0.15
+Run JMR for intercept test without covariate taxa and tuning, setting shrinkage at 0.15
 
 ```{r}
-JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', tune=0.15,cov.taxa=TRUE)
+JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', tune=0.15,cov.taxa=FALSE)
 ```
 
-Run JMR for slope test without tuning, setting shrinkage at 0.15
+Run JMR for slope test with covariate taxa but without tuning, setting shrinkage at 0.15
 
 ```{r}
 JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = 'age', tune=0.15,cov.taxa=TRUE)
