@@ -2,7 +2,7 @@
 #' @importFrom stats  model.matrix p.adjust pchisq quantile rnorm
 
 lh2_match<-function(o,z,rand_sub,rand_set,alph){
-  quad.n<-5
+  quad.n<-3
   Q<-quad.n^3
   
   alpham=matrix(rep(alph,Q),ncol = Q)
