@@ -30,7 +30,7 @@ JMR(
 
 \item{logistic_idset}{A dataframe of subject and set identifier mapping to logistic_design, in the order of subjectID, setID, order (within-set indicator).}
 
-\item{rand.var}{The type of trajectory analysis, intercept: '(Intercept)', or slope: 'age'.}
+\item{rand.var}{The type of trajectory analysis, intercept: '(Intercept)', or slope: the variable for time point or age in long_design.}
 
 \item{tune}{A scalar or vector of tuning parameter for L2 regularization. If otu_tab contains <10 rows (OTUs), tune must be a scalar.}
 
