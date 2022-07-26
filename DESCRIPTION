@@ -8,7 +8,7 @@ Description: This framework detects taxon-specific trajectory predictive of dise
     A simulation pipeline is provided to generate high-dimensional raw counts table for temporal metagenomes with matched sets.
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Depends: 
     R (>= 4.2.0),
     optimParallel
@@ -21,4 +21,3 @@ Imports:
     dirmult,
     mvQuad
 License: MIT + file LICENSE
-

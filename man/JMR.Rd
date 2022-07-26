@@ -12,7 +12,7 @@ JMR(
   long_idset,
   logistic_idset,
   rand.var,
-  tune = seq(0.05, 0.15, 0.05),
+  tune = 0.15,
   cov.taxa = T,
   n.cores = NULL
 )
@@ -26,9 +26,9 @@ JMR(
 
 \item{outcome}{A vector of disease outcome per subject.}
 
-\item{long_idset}{Specify the set and subject identifier names in long_design, in the order of c(set_ID, subject_ID)}
+\item{long_idset}{A dataframe of subject and set identifiers mapping to long_design, in the order of subjectID, setID, order (within-set indicator).}
 
-\item{logistic_idset}{Specify the set and subject identifier names in logistic_design, in the order of c(set_ID, subject_ID)}
+\item{logistic_idset}{A dataframe of subject and set identifier mapping to logistic_design, in the order of subjectID, setID, order (within-set indicator).}
 
 \item{rand.var}{The type of trajectory analysis, intercept: '(Intercept)', or slope: 'age'.}
 

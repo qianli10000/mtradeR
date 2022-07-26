@@ -8,7 +8,7 @@ We proposed a Joint model with Matching and Regularization (JMR) to detect OTUs 
 
 ## Installation
 
-```{r}
+```r
 install.packages("devtools")
 library(devtools)
 install_github('qianli10000/mtradeR')
@@ -21,8 +21,14 @@ We use the real data from a small subset of longitudinal metagenomes (n=153) in 
 
 Load real data.
 
-```{r}
+```r
 data(example_data)
+long<-example_data$long
+logistic<-example_data$logistic
+taxa_filtered<-taxa_filtered
+```
+Preview of real data
+```r
 head(long)
   subjectID setID order sampleID sample_age outcome genotype
 1    274433  1161     1       S1          4       0        1
