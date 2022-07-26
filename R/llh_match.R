@@ -55,9 +55,9 @@ llh_match<-function(par_all,input,shrinkage){
   joint.logl_2=tcrossprod(input$prod.mat2,t(llkh1_2))+llkh2_2
     
   
-  l=-log(rowSums(input$gh.weights*exp(joint.logl_1+joint.logl_2)))  
-  
-  
+  l=-log(rowSums(input$gh.weights*exp(joint.logl_1+joint.logl_2)))
+
+
   l=ifelse(is.na(l)|is.infinite(l),0,l)
   penalty=shrinkage*sum(par^2)
   return((sum(l)+penalty))
@@ -108,12 +108,12 @@ prep<-function(taxa,others_abun,others_pres,long_design,logistic_design,outcome,
   prod.mat1=t(sapply(unique(long_id[long_order==1]),FUN = function(x){
     ifelse(long_id[long_order==1]==x,1,0)
   }))
-  #prod.mat1=bdiag(prod.mat1)
+  #prod.mat1=Matrix::bdiag(prod.mat1)
   
   prod.mat2=t(sapply(unique(long_id[long_order==2]),FUN = function(x){
     ifelse(long_id[long_order==2]==x,1,0)
   }))
-  #prod.mat2=bdiag(prod.mat2)
+  #prod.mat2=Matrix::bdiag(prod.mat2)
   
   long_design_1=long_design[long_order==1,]
   long_design_2=long_design[long_order==2,]

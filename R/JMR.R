@@ -5,8 +5,8 @@
 #' @param long_design Design matrix for longitudinal variables in the abundance-presence sub-model.
 #' @param logistic_design Design matrix for risk factors in the disease sub-model.
 #' @param outcome A vector of disease outcome per subject.
-#' @param long_idset Specify the set and subject identifier names in long_design, in the order of c(set_ID, subject_ID)
-#' @param logistic_idset Specify the set and subject identifier names in logistic_design, in the order of c(set_ID, subject_ID)
+#' @param long_idset A dataframe of subject and set identifiers mapping to long_design, in the order of subjectID, setID, order (within-set indicator).
+#' @param logistic_idset A dataframe of subject and set identifier mapping to logistic_design, in the order of subjectID, setID, order (within-set indicator).
 #' @param rand.var The type of trajectory analysis, intercept: '(Intercept)', or slope: 'age'.
 #' @param tune A scalar or vector of tuning parameter for L2 regularization. If otu_tab contains <10 rows (OTUs), tune must be a scalar. 
 #' @param cov.taxa Whether to adjust for interdependence between taxa, default as cov.taxa=TRUE. If otu_tab contains only one row (OTU), cov.taxa must be FALSE. 
@@ -48,7 +48,7 @@
 
 
 JMR<-function(otu_tab,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,
-                  tune=seq(0.05,0.15,0.05),cov.taxa=T,n.cores=NULL){
+                  tune=0.15,cov.taxa=T,n.cores=NULL){
 
 
   
@@ -63,8 +63,8 @@ if(is.null(nrow(otu_tab))){
   }
   
   cl <- parallel::makeCluster(n.cores)     # set the number of processor cores
-  
-  parallel::setDefaultCluster(cl=cl) 
+
+  parallel::setDefaultCluster(cl=cl)
  
 # cross-validation
 if(length(tune)>1){
@@ -182,7 +182,7 @@ for(i in 1:n_otu){
   }else{others_pres_input=others_pres}
 
   
-  res=JMR_core(taxa,others_abun_input,others_pres_input,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=F,n.cores)
+  res=JMR_core(taxa,others_abun_input,others_pres_input,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,shrinkage,trace=F)
   
   res_lambda=rbind(res_lambda,as.numeric(c(res$Main_coef['composition_lambda',-5],res$Main_coef['presence_lambda',-5])))
 
