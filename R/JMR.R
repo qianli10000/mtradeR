@@ -7,7 +7,7 @@
 #' @param outcome A vector of disease outcome per subject.
 #' @param long_idset A dataframe of subject and set identifiers mapping to long_design, in the order of subjectID, setID, order (within-set indicator).
 #' @param logistic_idset A dataframe of subject and set identifier mapping to logistic_design, in the order of subjectID, setID, order (within-set indicator).
-#' @param rand.var The type of trajectory analysis, intercept: '(Intercept)', or slope: 'age'.
+#' @param rand.var The type of trajectory analysis, intercept: '(Intercept)', or slope: the variable for time point or age in long_design.
 #' @param tune A scalar or vector of tuning parameter for L2 regularization. If otu_tab contains <10 rows (OTUs), tune must be a scalar. 
 #' @param cov.taxa Whether to adjust for interdependence between taxa, default as cov.taxa=TRUE. If otu_tab contains only one row (OTU), cov.taxa must be FALSE. 
 #' @param n.cores Number of workers registered in parallel computing. 
@@ -103,7 +103,7 @@ if(length(tune)>1){
     shrinkage=rho_opt
   }else{shrinkage=max(tune)}
 }else{shrinkage=tune}
-cat('shrinkage.optim=',shrinkage,'\n')
+cat('shrinkage=',shrinkage,'\n')
 
 
 

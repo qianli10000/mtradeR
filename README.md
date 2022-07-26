@@ -25,7 +25,7 @@ Load real data.
 data(example_data)
 long<-example_data$long
 logistic<-example_data$logistic
-taxa_filtered<-taxa_filtered
+taxa_filtered<-example_data$taxa_filtered
 ```
 Preview of real data
 ```r
@@ -88,14 +88,14 @@ JMR.res<- JMR(otu_tab = taxa_filtered,long_design = long_design,
 -   **long_design**: a design matrix for longitudinal variables in the abundance-presence sub-model.
 -   **logistic_design**: a design matrix for risk factors in the disease sub-model.
 -   **outcome**: a vector of disease outcome per subject mapped to logistic_design.
--   **long_idset**: a dataframe of subject and set identifiers mapping to long_design, in the order of subjectID, setID, order (within-set indicator).
--   **logistic_idset**: a dataframe of subject and set identifier mapping to logistic_design, in the order of subjectID, setID, order (within-set indicator).
+-   **long_idset**: a dataframe of subject and set identifiers mapped to long_design, in the order of subjectID, setID, order (within-set indicator).
+-   **logistic_idset**: a dataframe of subject and set identifier mapped to logistic_design, in the order of subjectID, setID, order (within-set indicator).
 -   **rand.var**: the type of trajectory analysis, intercept: '(Intercept)', or slope: 'age'.
 -   **tune**: a scalar or vector of tuning parameter for L2 regularization. If otu_tab contains \<10 OTUs, tuning is not applicable and must be set as scalar. The default value is tune=0.15.
 -   **cov.taxa**: whether to adjust for unknown dependence between taxa, default is cov.taxa=TRUE. If otu_tab contains only one OTU, cov.taxa must be FALSE.
 -   **n.cores**: \# of workers registered in parallel computing. If n.cores is not specified (NULL), JMR sets n.cores=detectCores()-1.
 
-The returned dataframe test.result shows the pvalue (joint.pvalue) and BH-adjusted pvalue (FDR) for taxon-specific association with disease outcome.
+The returned dataframe test.result shows the p-value (joint.pvalue) and BH-adjusted p-value (FDR) for taxon-specific association with disease outcome.
 
 ```{r}
 tail(JMR.res$test.result,c(5,2))
