@@ -62,14 +62,20 @@ logistic_idset=logistic[,1:3]
 
 An intercept test without adjusting for top-correlated taxa (JMR-NC).
 
-```{r}
-JMRNC.res=JMR(otu_tab = taxa_filtered,long_design = long_design,logistic_design = logistic_design,outcome = logistic$outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', cov.taxa=FALSE)
+```r
+JMRNC.res<- JMR(otu_tab = taxa_filtered,long_design = long_design,
+               logistic_design = logistic_design,outcome = logistic$outcome, 
+               long_idset = long_idset,logistic_idset = logistic_idset,
+               rand.var = '(Intercept)', cov.taxa=FALSE)
 ```
 
 An intercept test adjusting for top-correlated taxa.
 
-```{r}
-JMR.res=JMR(otu_tab = taxa_filtered,long_design = long_design,logistic_design = logistic_design,outcome = logistic$outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', cov.taxa=TRUE)
+```r
+JMR.res<- JMR(otu_tab = taxa_filtered,long_design = long_design,
+             logistic_design = logistic_design,outcome = logistic$outcome, 
+             long_idset = long_idset,logistic_idset = logistic_idset,
+             rand.var = '(Intercept)', cov.taxa=TRUE)
 ```
 
 -   **otu_tab**: a relative abundance table with rows as filtered OTUs and columns as samples.
@@ -133,18 +139,27 @@ input_tab=rel.abun[filter,]
 
 Run JMR for intercept test without covariate taxa and tuning, setting shrinkage at 0.15
 
-```{r}
-JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', tune=0.15,cov.taxa=FALSE)
+```r
+JMR.res=JMR(otu_tab = input_tab,long_design = long_design,
+            logistic_design = logistic_design,outcome = outcome, 
+            long_idset = long_idset,logistic_idset = logistic_idset,
+            rand.var = '(Intercept)', tune=0.15,cov.taxa=FALSE)
 ```
 
 Run JMR for slope test with covariate taxa but without tuning, setting shrinkage at 0.15
 
-```{r}
-JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = 'age', tune=0.15,cov.taxa=TRUE)
+```r
+JMR.res=JMR(otu_tab = input_tab,long_design = long_design,
+            logistic_design = logistic_design,outcome = outcome, 
+            long_idset = long_idset,logistic_idset = logistic_idset,
+            rand.var = 'age', tune=0.15,cov.taxa=TRUE)
 ```
 
 Run JMR for intercept test with tuning but without selecting covariate taxa
 
-```{r}
-JMR.res=JMR(otu_tab = input_tab,long_design = long_design,logistic_design = logistic_design,outcome = outcome, long_idset = long_idset,logistic_idset = logistic_idset,rand.var = '(Intercept)', tune=seq(0.05,0.15,0.05),cov.taxa=FALSE)
+```r
+JMR.res=JMR(otu_tab = input_tab,long_design = long_design,
+            logistic_design = logistic_design,outcome = outcome, 
+            long_idset = long_idset,logistic_idset = logistic_idset,
+            rand.var = '(Intercept)', tune=seq(0.05,0.15,0.05),cov.taxa=FALSE)
 ```
