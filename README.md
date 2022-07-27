@@ -90,7 +90,7 @@ JMR.res<- JMR(otu_tab = taxa_filtered,long_design = long_design,
 -   **outcome**: a vector of disease outcome per subject mapped to logistic_design.
 -   **long_idset**: a dataframe of subject and set identifiers mapped to long_design, in the order of subjectID, setID, order (within-set indicator).
 -   **logistic_idset**: a dataframe of subject and set identifier mapped to logistic_design, in the order of subjectID, setID, order (within-set indicator).
--   **rand.var**: the type of trajectory analysis, intercept: '(Intercept)', or slope: 'age'.
+-   **rand.var**: the type of trajectory analysis, intercept: '(Intercept)', or slope: 'sample_age'.
 -   **tune**: a scalar or vector of tuning parameter for L2 regularization. If otu_tab contains \<10 OTUs, tuning is not applicable and must be set as scalar. The default value is tune=0.15.
 -   **cov.taxa**: whether to adjust for unknown dependence between taxa, default is cov.taxa=TRUE. If otu_tab contains only one OTU, cov.taxa must be FALSE.
 -   **n.cores**: \# of workers registered in parallel computing. If n.cores is not specified (NULL), JMR sets n.cores=detectCores()-1.
@@ -98,13 +98,13 @@ JMR.res<- JMR(otu_tab = taxa_filtered,long_design = long_design,
 The returned dataframe test.result shows the p-value (joint.pvalue) and BH-adjusted p-value (FDR) for taxon-specific association with disease outcome.
 
 ```{r}
-tail(JMR.res$test.result,c(5,2))
+tail(JMRNC.res$test.result,c(5,2))
        joint.pvalue       FDR
-OTU96     0.2397724 0.5648161
-OTU97     0.9812084 0.9999950
-OTU98     0.9747299 0.9999950
-OTU99     0.5794796 0.9796622
-OTU100    0.9737509 0.9999950
+OTU96     0.2409968 0.3596967
+OTU97     0.6072212 0.6979554
+OTU98     0.6588216 0.7239798
+OTU99     0.6317104 0.7120273
+OTU100    0.7983006 0.8492559
 ```
 
 ## A simulation example
