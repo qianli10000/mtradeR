@@ -50,7 +50,8 @@
 JMR<-function(otu_tab,long_design,logistic_design,outcome,long_idset,logistic_idset,rand.var,
                   tune=0.15,cov.taxa=T,n.cores=NULL){
 
-
+oldw <- getOption("warn")
+options(warn = -1)
   
 if(is.null(nrow(otu_tab))){
   otu_tab=matrix(otu_tab,nrow=1)
@@ -199,5 +200,5 @@ res_lambda$joint.pvalue=joint.pvalue
 res_lambda$FDR=FDR
 output=list(test.result=res_lambda,rho=shrinkage)
 return(output)
-
+on.exit(options(warn = oldw))
 }
