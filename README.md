@@ -8,7 +8,7 @@ We proposed a Joint model with Matching and Regularization (JMR) to detect OTUs 
 
 ## Installation
 
-```r
+``` r
 install.packages("devtools")
 library(devtools)
 install_github('qianli10000/mtradeR')
@@ -17,18 +17,20 @@ library('mtradeR')
 
 ## A real data example
 
-We use the real data from a small subset of longitudinal metagenomes (n=153) in a large-cohort study of type 1 diabetes [Stewart and Ajami et al.](https://www.nature.com/articles/s41586-018-0617-x) to demonstrate the usage of JMR. We randomly select P=100 OTUs with relative abundance >$10^{-5}$ and prevalence >10% in this example. The OTU names are masked in this dataset.
+We use the real data from a small subset of longitudinal metagenomes (n=153) in a large-cohort study of type 1 diabetes [Stewart and Ajami et al.](https://www.nature.com/articles/s41586-018-0617-x) to demonstrate the usage of JMR. We randomly select P=100 OTUs with relative abundance \>$10^{-5}$ and prevalence \>10% in this example. The OTU names are masked in this dataset.
 
 Load real data.
 
-```r
+``` r
 data(example_data)
 long<-example_data$long
 logistic<-example_data$logistic
 taxa_filtered<-example_data$taxa_filtered
 ```
+
 Preview of real data
-```r
+
+``` r
 head(long)
   subjectID setID order sampleID sample_age outcome genotype
 1    274433  1161     1       S1          4       0        1
@@ -54,7 +56,6 @@ OTU2 0.00001 1e-04 0.00034 0e+00 0.00000
 OTU3 0.00015 6e-04 0.00013 2e-05 0.00018
 OTU4 0.00001 6e-05 0.00000 0e+00 0.00001
 OTU5 0.00001 1e-05 0.00000 1e-05 0.00001
-
 ```
 
 Format input data.
@@ -68,7 +69,7 @@ logistic_idset=logistic[,1:3]
 
 An intercept test without adjusting for top-correlated taxa (JMR-NC).
 
-```r
+``` r
 JMRNC.res<- JMR(otu_tab = taxa_filtered,long_design = long_design,
                logistic_design = logistic_design,outcome = logistic$outcome, 
                long_idset = long_idset,logistic_idset = logistic_idset,
@@ -77,7 +78,7 @@ JMRNC.res<- JMR(otu_tab = taxa_filtered,long_design = long_design,
 
 An intercept test adjusting for top-correlated taxa.
 
-```r
+``` r
 JMR.res<- JMR(otu_tab = taxa_filtered,long_design = long_design,
              logistic_design = logistic_design,outcome = logistic$outcome, 
              long_idset = long_idset,logistic_idset = logistic_idset,
@@ -145,7 +146,7 @@ input_tab=rel.abun[filter,]
 
 Run JMR for intercept test without covariate taxa and tuning, setting shrinkage at 0.15
 
-```r
+``` r
 JMR.res=JMR(otu_tab = input_tab,long_design = long_design,
             logistic_design = logistic_design,outcome = outcome, 
             long_idset = long_idset,logistic_idset = logistic_idset,
@@ -154,7 +155,7 @@ JMR.res=JMR(otu_tab = input_tab,long_design = long_design,
 
 Run JMR for slope test with covariate taxa but without tuning, setting shrinkage at 0.15
 
-```r
+``` r
 JMR.res=JMR(otu_tab = input_tab,long_design = long_design,
             logistic_design = logistic_design,outcome = outcome, 
             long_idset = long_idset,logistic_idset = logistic_idset,
@@ -163,7 +164,7 @@ JMR.res=JMR(otu_tab = input_tab,long_design = long_design,
 
 Run JMR for intercept test with tuning but without selecting covariate taxa
 
-```r
+``` r
 JMR.res=JMR(otu_tab = input_tab,long_design = long_design,
             logistic_design = logistic_design,outcome = outcome, 
             long_idset = long_idset,logistic_idset = logistic_idset,
