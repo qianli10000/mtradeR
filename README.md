@@ -60,7 +60,7 @@ OTU5 0.00001 1e-05 0.00000 1e-05 0.00001
 
 Format input data.
 
-```{r}
+```r
 long_design=model.matrix(~sample_age+genotype,long)
 logistic_design=model.matrix(~genotype,logistic)
 long_idset=long[,1:3]
@@ -131,14 +131,14 @@ logistic_idset <- logistic[,c('id','set','order')]
 
 Generate metagenomic raw counts table
 
-```{r}
+```r
 raw.counts=TaxaSim(DM_MLE,StatSim = meta_data,shift_subject = 0.9,trace =F)
 rel.abun=t(t(raw.counts)/colSums(raw.counts))
 ```
 
 Filter taxa by relative abundance and prevalence
 
-```{r}
+```r
 mean.rel.abun=rowMeans(rel.abun)
 filter=mean.rel.abun>1e-5 & rowSums(rel.abun==0)<0.9*ncol(rel.abun)
 input_tab=rel.abun[filter,]
