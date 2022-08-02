@@ -17,7 +17,7 @@ library('mtradeR')
 
 ## A real data example
 
-We use the real data from a small subset of longitudinal metagenomes (n=153) in a large-cohort study of type 1 diabetes [Stewart and Ajami et al.](https://www.nature.com/articles/s41586-018-0617-x) to demonstrate the usage of JMR. We randomly select P=100 OTUs with relative abundance \>$10^{-5}$ and prevalence \>10% in this example. The OTU names are masked in this dataset.
+We use the real data from a small subset of longitudinal metagenomes (n=153) in a large-cohort study of type 1 diabetes [Stewart and Ajami et al.](https://www.nature.com/articles/s41586-018-0617-x) to demonstrate the usage of JMR. We randomly select P=100 OTUs with relative abundance >$10^{-5}$ and prevalence >10% in this example. The OTU names are masked in this dataset.
 
 Load real data.
 
